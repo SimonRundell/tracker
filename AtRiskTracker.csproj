@@ -24,4 +24,238 @@
     </None>
   </ItemGroup>
 
+  <!-- WinForms designer metadata: SubType enables "View Designer"; DependentUpon nests .Designer.cs under its parent -->
+  <ItemGroup>
+    <!-- Forms -->
+    <Compile Update="Forms\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Forms\ChangePasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\ChangePasswordForm.Designer.cs">
+      <DependentUpon>ChangePasswordForm.cs</DependentUpon>
+    </Compile>
+
+    <!-- Dialogs -->
+    <Compile Update="Dialogs\AssessmentDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\AssessmentDialog.Designer.cs">
+      <DependentUpon>AssessmentDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Dialogs\NotesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\NotesDialog.Designer.cs">
+      <DependentUpon>NotesDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Dialogs\ObjectivesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\ObjectivesDialog.Designer.cs">
+      <DependentUpon>ObjectivesDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Dialogs\PredictionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\PredictionDialog.Designer.cs">
+      <DependentUpon>PredictionDialog.cs</DependentUpon>
+    </Compile>
+
+    <!-- Admin edit dialogs -->
+    <Compile Update="Admin\ConcernEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\ConcernEditDialog.Designer.cs">
+      <DependentUpon>ConcernEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\CourseEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\CourseEditDialog.Designer.cs">
+      <DependentUpon>CourseEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\CourseUnitEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\CourseUnitEditDialog.Designer.cs">
+      <DependentUpon>CourseUnitEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\CriterionEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\CriterionEditDialog.Designer.cs">
+      <DependentUpon>CriterionEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\GroupEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\GroupEditDialog.Designer.cs">
+      <DependentUpon>GroupEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\QualTypeEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\QualTypeEditDialog.Designer.cs">
+      <DependentUpon>QualTypeEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\SectionEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\SectionEditDialog.Designer.cs">
+      <DependentUpon>SectionEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\StudentEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\StudentEditDialog.Designer.cs">
+      <DependentUpon>StudentEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\UnitEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\UnitEditDialog.Designer.cs">
+      <DependentUpon>UnitEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\UserEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\UserEditDialog.Designer.cs">
+      <DependentUpon>UserEditDialog.cs</DependentUpon>
+    </Compile>
+
+    <!-- Admin panels (UserControl subclasses) -->
+    <Compile Update="Admin\AdminPanelBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\AdminPanelBase.Designer.cs">
+      <DependentUpon>AdminPanelBase.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\AdminTabPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\AdminTabPanel.Designer.cs">
+      <DependentUpon>AdminTabPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\ConcernsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\ConcernsPanel.Designer.cs">
+      <DependentUpon>ConcernsPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\CourseUnitsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\CourseUnitsPanel.Designer.cs">
+      <DependentUpon>CourseUnitsPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\CoursesPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\CoursesPanel.Designer.cs">
+      <DependentUpon>CoursesPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\GroupsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\GroupsPanel.Designer.cs">
+      <DependentUpon>GroupsPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\ObjectivesPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\ObjectivesPanel.Designer.cs">
+      <DependentUpon>ObjectivesPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\QualTypesPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\QualTypesPanel.Designer.cs">
+      <DependentUpon>QualTypesPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\StudentsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\StudentsPanel.Designer.cs">
+      <DependentUpon>StudentsPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\UnitsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\UnitsPanel.Designer.cs">
+      <DependentUpon>UnitsPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\UsersPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\UsersPanel.Designer.cs">
+      <DependentUpon>UsersPanel.cs</DependentUpon>
+    </Compile>
+
+    <!-- Controls -->
+    <Compile Update="Controls\HtmlEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\HtmlEditor.Designer.cs">
+      <DependentUpon>HtmlEditor.cs</DependentUpon>
+    </Compile>
+
+    <!-- Dashboard -->
+    <Compile Update="Forms\Dashboard\DashboardPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\Dashboard\DashboardPanel.Designer.cs">
+      <DependentUpon>DashboardPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Forms\Dashboard\GradeGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\Dashboard\GradeGrid.Designer.cs">
+      <DependentUpon>GradeGrid.cs</DependentUpon>
+    </Compile>
+
+    <!-- Reports -->
+    <Compile Update="Reports\ReportsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Reports\ReportsPanel.Designer.cs">
+      <DependentUpon>ReportsPanel.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>
