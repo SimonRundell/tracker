@@ -15,7 +15,22 @@ namespace AtRiskTracker.Admin
 {
     public partial class UnitsPanel : AdminPanelBase
     {
+        private TextBox _filterCode, _filterName;
+
         public UnitsPanel() { InitializeComponent(); }
+
+        protected override Control BuildFilterBar()
+        {
+            var bar = MakeFilterPanel();
+            _filterCode = AddFilterBox(bar, "Code", 52, 110);
+            _filterName = AddFilterBox(bar, "Name", 170, 240);
+            AddClearButton(bar, 418, _filterCode, _filterName);
+            return bar;
+        }
+
+        protected override bool RowMatchesFilter(DataGridViewRow row)
+            => CellContains(row, 1, _filterCode?.Text)
+            && CellContains(row, 2, _filterName?.Text);
 
         protected override void DefineColumns()
         {
@@ -44,7 +59,7 @@ namespace AtRiskTracker.Admin
             using var dlg = new UnitEditDialog(null);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PostAsync<object>("/units/create.php", dlg.ToPayload());
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task EditItemAsync(DataGridViewRow row)
@@ -53,14 +68,14 @@ namespace AtRiskTracker.Admin
             using var dlg = new UnitEditDialog(u);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PutAsync<object>("/units/update.php", dlg.ToPayload(u.Id));
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task DeleteItemAsync(DataGridViewRow row)
         {
             if (!(row.Tag is UnitAdminDto u)) return;
             await ApiService.Instance.DeleteAsync("/units/delete.php", new { id = u.Id });
-            await LoadDataAsync();
+            await ReloadAsync();
         }
     }
 

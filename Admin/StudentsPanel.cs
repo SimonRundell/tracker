@@ -15,7 +15,24 @@ namespace AtRiskTracker.Admin
 {
     public partial class StudentsPanel : AdminPanelBase
     {
+        private TextBox _filterCis, _filterFirst, _filterLast;
+
         public StudentsPanel() { InitializeComponent(); }
+
+        protected override Control BuildFilterBar()
+        {
+            var bar = MakeFilterPanel();
+            _filterCis   = AddFilterBox(bar, "CIS No",   52,  90);
+            _filterFirst = AddFilterBox(bar, "Forename", 150, 130);
+            _filterLast  = AddFilterBox(bar, "Surname",  288, 130);
+            AddClearButton(bar, 426, _filterCis, _filterFirst, _filterLast);
+            return bar;
+        }
+
+        protected override bool RowMatchesFilter(DataGridViewRow row)
+            => CellContains(row, 1, _filterCis?.Text)
+            && CellContains(row, 2, _filterFirst?.Text)
+            && CellContains(row, 3, _filterLast?.Text);
 
         protected override void DefineColumns()
         {
@@ -43,7 +60,7 @@ namespace AtRiskTracker.Admin
             using var dlg = new StudentEditDialog(null);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PostAsync<object>("/students/create.php", dlg.ToPayload());
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task EditItemAsync(DataGridViewRow row)
@@ -52,14 +69,14 @@ namespace AtRiskTracker.Admin
             using var dlg = new StudentEditDialog(s);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PutAsync<object>("/students/update.php", dlg.ToPayload(s.Id));
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task DeleteItemAsync(DataGridViewRow row)
         {
             if (!(row.Tag is StudentAdminDto s)) return;
             await ApiService.Instance.DeleteAsync("/students/delete.php", new { id = s.Id });
-            await LoadDataAsync();
+            await ReloadAsync();
         }
     }
 

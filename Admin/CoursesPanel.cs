@@ -15,7 +15,22 @@ namespace AtRiskTracker.Admin
 {
     public partial class CoursesPanel : AdminPanelBase
     {
+        private TextBox _filterName, _filterQualType;
+
         public CoursesPanel() { InitializeComponent(); }
+
+        protected override Control BuildFilterBar()
+        {
+            var bar = MakeFilterPanel();
+            _filterName     = AddFilterBox(bar, "Course Name", 52, 200);
+            _filterQualType = AddFilterBox(bar, "Qual Type",  260, 140);
+            AddClearButton(bar, 408, _filterName, _filterQualType);
+            return bar;
+        }
+
+        protected override bool RowMatchesFilter(DataGridViewRow row)
+            => CellContains(row, 1, _filterName?.Text)
+            && CellContains(row, 2, _filterQualType?.Text);
 
         protected override void DefineColumns()
         {
@@ -44,7 +59,7 @@ namespace AtRiskTracker.Admin
             using var dlg = new CourseEditDialog(null, await LoadQualTypesAsync());
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PostAsync<object>("/courses/create.php", dlg.ToPayload());
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task EditItemAsync(DataGridViewRow row)
@@ -53,14 +68,14 @@ namespace AtRiskTracker.Admin
             using var dlg = new CourseEditDialog(c, await LoadQualTypesAsync());
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PutAsync<object>("/courses/update.php", dlg.ToPayload(c.Id));
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task DeleteItemAsync(DataGridViewRow row)
         {
             if (!(row.Tag is CourseDto c)) return;
             await ApiService.Instance.DeleteAsync("/courses/delete.php", new { id = c.Id });
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         private Task<List<QualTypeDto>> LoadQualTypesAsync()

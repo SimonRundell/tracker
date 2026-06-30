@@ -15,7 +15,28 @@ namespace AtRiskTracker.Admin
 {
     public partial class UsersPanel : AdminPanelBase
     {
+        private TextBox  _filterName, _filterEmail;
+        private ComboBox _filterRole;
+
         public UsersPanel() { InitializeComponent(); }
+
+        protected override Control BuildFilterBar()
+        {
+            var bar = MakeFilterPanel();
+            _filterName  = AddFilterBox(bar,  "Name",  52, 150);
+            _filterEmail = AddFilterBox(bar,  "Email", 210, 180);
+            _filterRole  = AddFilterCombo(bar, "Role", 398, new[] { "All", "staff", "admin" }, 100);
+            AddClearButton(bar, 506, _filterName, _filterEmail, _filterRole);
+            return bar;
+        }
+
+        protected override bool RowMatchesFilter(DataGridViewRow row)
+        {
+            string role = _filterRole?.SelectedItem?.ToString();
+            return CellContains(row, 1, _filterName?.Text)
+                && CellContains(row, 2, _filterEmail?.Text)
+                && (role == null || role == "All" || CellEquals(row, 3, role));
+        }
 
         protected override void DefineColumns()
         {
@@ -41,7 +62,7 @@ namespace AtRiskTracker.Admin
             using var dlg = new UserEditDialog(null);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PostAsync<object>("/users/create.php", dlg.ToPayload());
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task EditItemAsync(DataGridViewRow row)
@@ -50,14 +71,14 @@ namespace AtRiskTracker.Admin
             using var dlg = new UserEditDialog(u);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PutAsync<object>("/users/update.php", dlg.ToPayload(u.Id));
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task DeleteItemAsync(DataGridViewRow row)
         {
             if (!(row.Tag is UserAdminDto u)) return;
             await ApiService.Instance.DeleteAsync("/users/delete.php", new { id = u.Id });
-            await LoadDataAsync();
+            await ReloadAsync();
         }
     }
 

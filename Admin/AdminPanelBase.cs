@@ -51,7 +51,7 @@ namespace AtRiskTracker.Admin
             _btnAdd.Click    += async (s, e) => await SafeRunAsync(AddItemAsync);
             _btnEdit.Click   += async (s, e) => { if (SelectedRow != null) await SafeRunAsync(() => EditItemAsync(SelectedRow)); };
             _btnDelete.Click += async (s, e) => { if (SelectedRow != null && ConfirmDelete()) await SafeRunAsync(() => DeleteItemAsync(SelectedRow)); };
-            _btnRefresh.Click+= async (s, e) => await SafeRunAsync(LoadDataAsync);
+            _btnRefresh.Click+= async (s, e) => await SafeRunAsync(ReloadAsync);
 
             toolbar.Controls.AddRange(new Control[] { _btnAdd, _btnEdit, _btnDelete, _btnRefresh });
 
@@ -98,11 +98,13 @@ namespace AtRiskTracker.Admin
 
             DefineColumns();
 
+            var filterControl = BuildFilterBar();
             Controls.Add(_grid);
             Controls.Add(_lblError);
+            if (filterControl != null) Controls.Add(filterControl);
             Controls.Add(toolbar);
 
-            Load += async (s, e) => await SafeRunAsync(LoadDataAsync);
+            Load += async (s, e) => await SafeRunAsync(ReloadAsync);
         }
 
         // ----------------------------------------------------------------
@@ -148,6 +150,135 @@ namespace AtRiskTracker.Admin
         {
             int idx = _grid.Rows.Add(values);
             return _grid.Rows[idx];
+        }
+
+        // ----------------------------------------------------------------
+        // Filter support — override in subclasses that need a filter bar
+        // ----------------------------------------------------------------
+
+        /** Returns a filter bar Panel, or null if the panel has no filter. */
+        protected virtual Control BuildFilterBar() => null;
+
+        /** Returns true if the row should be visible given the current filter state. */
+        protected virtual bool RowMatchesFilter(DataGridViewRow row) => true;
+
+        /** Shows/hides rows according to RowMatchesFilter. */
+        protected void ApplyFilter()
+        {
+            foreach (DataGridViewRow row in _grid.Rows)
+                row.Visible = RowMatchesFilter(row);
+        }
+
+        /** Loads data then reapplies the current filter. Use this instead of LoadDataAsync directly. */
+        protected async Task ReloadAsync()
+        {
+            await LoadDataAsync();
+            ApplyFilter();
+        }
+
+        /** Case-insensitive substring match on a cell value; empty filter matches everything. */
+        protected static bool CellContains(DataGridViewRow row, int col, string filter)
+            => string.IsNullOrEmpty(filter)
+            || (row.Cells[col].Value?.ToString() ?? "").IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
+
+        /** Case-insensitive exact match on a cell value; empty/null filter matches everything. */
+        protected static bool CellEquals(DataGridViewRow row, int col, string filter)
+            => string.IsNullOrEmpty(filter)
+            || string.Equals(row.Cells[col].Value?.ToString(), filter, StringComparison.OrdinalIgnoreCase);
+
+        /** Creates the styled container panel for a filter bar. */
+        protected Panel MakeFilterPanel()
+        {
+            var p = new Panel
+            {
+                Dock      = DockStyle.Top,
+                Height    = 54,
+                BackColor = Color.FromArgb(232, 238, 248),
+            };
+            p.Controls.Add(new Label
+            {
+                Text      = "Filter",
+                Location  = new System.Drawing.Point(6, 19),
+                AutoSize  = false,
+                Size      = new System.Drawing.Size(42, 16),
+                Font      = new Font("Trebuchet MS", 8f, FontStyle.Italic),
+                ForeColor = Color.FromArgb(80, 80, 110),
+            });
+            return p;
+        }
+
+        /** Adds a labelled TextBox to a filter panel; wires TextChanged to ApplyFilter. */
+        protected TextBox AddFilterBox(Panel bar, string caption, int x, int width = 140)
+        {
+            bar.Controls.Add(new Label
+            {
+                Text      = caption,
+                Location  = new System.Drawing.Point(x, 5),
+                AutoSize  = false,
+                Size      = new System.Drawing.Size(width, 16),
+                Font      = new Font("Trebuchet MS", 7.5f),
+                ForeColor = Color.FromArgb(60, 60, 80),
+            });
+            var txt = new TextBox
+            {
+                Location = new System.Drawing.Point(x, 23),
+                Size     = new System.Drawing.Size(width, 24),
+                Font     = new Font("Trebuchet MS", 9f),
+            };
+            txt.TextChanged += (s, e) => ApplyFilter();
+            bar.Controls.Add(txt);
+            return txt;
+        }
+
+        /** Adds a labelled drop-down ComboBox to a filter panel; wires SelectedIndexChanged to ApplyFilter. */
+        protected ComboBox AddFilterCombo(Panel bar, string caption, int x, string[] items, int width = 120)
+        {
+            bar.Controls.Add(new Label
+            {
+                Text      = caption,
+                Location  = new System.Drawing.Point(x, 5),
+                AutoSize  = false,
+                Size      = new System.Drawing.Size(width, 16),
+                Font      = new Font("Trebuchet MS", 7.5f),
+                ForeColor = Color.FromArgb(60, 60, 80),
+            });
+            var cbo = new ComboBox
+            {
+                Location      = new System.Drawing.Point(x, 23),
+                Size          = new System.Drawing.Size(width, 24),
+                Font          = new Font("Trebuchet MS", 9f),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+            };
+            cbo.Items.AddRange(items);
+            cbo.SelectedIndex = 0;
+            cbo.SelectedIndexChanged += (s, e) => ApplyFilter();
+            bar.Controls.Add(cbo);
+            return cbo;
+        }
+
+        /** Adds a Clear button that resets each supplied TextBox/ComboBox to its blank/first-item state. */
+        protected void AddClearButton(Panel bar, int x, params Control[] fields)
+        {
+            var btn = new Button
+            {
+                Text      = "Clear",
+                Location  = new System.Drawing.Point(x, 19),
+                Size      = new System.Drawing.Size(60, 26),
+                BackColor = Color.FromArgb(140, 140, 150),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font      = new Font("Trebuchet MS", 8f),
+            };
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Click += (s, e) =>
+            {
+                foreach (var c in fields)
+                {
+                    if (c is TextBox t)   t.Text = "";
+                    else if (c is ComboBox cb) cb.SelectedIndex = 0;
+                }
+            };
+            bar.Controls.Add(btn);
         }
 
         private Button MakeBtn(string text, Color back)

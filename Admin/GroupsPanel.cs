@@ -15,7 +15,22 @@ namespace AtRiskTracker.Admin
 {
     public partial class GroupsPanel : AdminPanelBase
     {
+        private TextBox _filterGroup, _filterCourse;
+
         public GroupsPanel() { InitializeComponent(); }
+
+        protected override Control BuildFilterBar()
+        {
+            var bar = MakeFilterPanel();
+            _filterGroup  = AddFilterBox(bar, "Group Name", 52, 170);
+            _filterCourse = AddFilterBox(bar, "Course",    230, 170);
+            AddClearButton(bar, 408, _filterGroup, _filterCourse);
+            return bar;
+        }
+
+        protected override bool RowMatchesFilter(DataGridViewRow row)
+            => CellContains(row, 1, _filterGroup?.Text)
+            && CellContains(row, 2, _filterCourse?.Text);
 
         protected override void DefineColumns()
         {
@@ -48,7 +63,7 @@ namespace AtRiskTracker.Admin
             using var dlg = new GroupEditDialog(null, courses);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PostAsync<object>("/groups/create.php", dlg.ToPayload());
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task EditItemAsync(DataGridViewRow row)
@@ -58,14 +73,14 @@ namespace AtRiskTracker.Admin
             using var dlg = new GroupEditDialog(g, courses);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
             await ApiService.Instance.PutAsync<object>("/groups/update.php", dlg.ToPayload(g.Id));
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         protected override async Task DeleteItemAsync(DataGridViewRow row)
         {
             if (!(row.Tag is GroupDto g)) return;
             await ApiService.Instance.DeleteAsync("/groups/delete.php", new { id = g.Id });
-            await LoadDataAsync();
+            await ReloadAsync();
         }
 
         private async Task<List<CourseDto>> LoadCoursesAsync()
