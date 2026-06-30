@@ -26,7 +26,6 @@ namespace AtRiskTracker.Models
         [JsonProperty("cisnumber")] public string Cisnumber { get; set; }
         [JsonProperty("firstname")] public string Firstname { get; set; }
         [JsonProperty("lastname")]  public string Lastname  { get; set; }
-        [JsonProperty("email")]     public string Email     { get; set; }
         [JsonProperty("concern")]   public string Concern   { get; set; }
         [JsonProperty("notes")]     public string Notes     { get; set; }
     }
@@ -68,10 +67,9 @@ namespace AtRiskTracker.Models
     // Concerns
     public class ConcernDto
     {
-        [JsonProperty("id")]    public int    Id    { get; set; }
-        [JsonProperty("label")] public string Label { get; set; }
-        [JsonProperty("color")] public string Color { get; set; }
-        public override string ToString() => Label;
+        [JsonProperty("id")]      public int    Id      { get; set; }
+        [JsonProperty("concern")] public string Concern { get; set; }
+        public override string ToString() => Concern;
     }
 
     // Users
@@ -92,6 +90,42 @@ namespace AtRiskTracker.Models
         [JsonProperty("firstname")]  public string Firstname { get; set; }
         [JsonProperty("lastname")]   public string Lastname  { get; set; }
         [JsonProperty("cisnumber")]  public string Cisnumber { get; set; }
+    }
+
+    // Unit as returned by /units/index.php (includes section_type and course grouping fields)
+    public class UnitForObjectivesDto
+    {
+        [JsonProperty("id")]           public int    Id          { get; set; }
+        [JsonProperty("unitcode")]     public string Unitcode    { get; set; }
+        [JsonProperty("unitname")]     public string Unitname    { get; set; }
+        [JsonProperty("unitref")]      public string Unitref     { get; set; }
+        [JsonProperty("credits")]      public int    Credits     { get; set; }
+        [JsonProperty("glh")]          public int    Glh         { get; set; }
+        [JsonProperty("is_external")]  public int    IsExternal  { get; set; }
+        [JsonProperty("section_type")] public string SectionType { get; set; }
+        [JsonProperty("courses")]      public string Courses     { get; set; }
+        [JsonProperty("course_ids")]   public string CourseIds   { get; set; }
+        public override string ToString() => $"{Unitcode} — {Unitname}";
+    }
+
+    // Section (one item from /criteria/index.php?unit_id=X)
+    public class SectionDto
+    {
+        [JsonProperty("section_id")]    public int                SectionId    { get; set; }
+        [JsonProperty("section_label")] public string             SectionLabel { get; set; }
+        [JsonProperty("section_title")] public string             SectionTitle { get; set; }
+        [JsonProperty("sort_order")]    public int                SortOrder    { get; set; }
+        [JsonProperty("criteria")]      public List<CriterionDto> Criteria     { get; set; }
+    }
+
+    // Criterion within a section
+    public class CriterionDto
+    {
+        [JsonProperty("id")]          public int    Id          { get; set; }
+        [JsonProperty("section_id")]  public int    SectionId   { get; set; }
+        [JsonProperty("code")]        public string Code        { get; set; }
+        [JsonProperty("description")] public string Description { get; set; }
+        [JsonProperty("sort_order")]  public int    SortOrder   { get; set; }
     }
 
     // Assessment defs (admin)

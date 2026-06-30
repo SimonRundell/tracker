@@ -1,73 +1,45 @@
 /**
- * NotesDialog — view and edit freeform notes for a student.
+ * NotesDialog — view and edit freeform rich-text notes for a student.
+ *
+ * Uses HtmlEditor (WebBrowser + contenteditable) to produce HTML fragments
+ * compatible with the TipTap editor used by the React web client.
  *
  * © 2026 Exeter College — Creative Commons NC-BY-SA 4.0
  */
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using AtRiskTracker.Models;
 using AtRiskTracker.Services;
 
 namespace AtRiskTracker.Dialogs
 {
-    public class NotesDialog : Form
+    public partial class NotesDialog : Form
     {
-        private RichTextBox _txt;
-        public  string Notes => _txt.Text;
+        private string _savedHtml = "";
+
+        /// <summary>The saved HTML fragment; only valid after DialogResult.OK.</summary>
+        public string Notes => _savedHtml;
 
         private readonly StudentDto _student;
 
         public NotesDialog(StudentDto student)
         {
             _student = student;
-            BuildUi();
-        }
-
-        private void BuildUi()
-        {
-            Text            = $"Notes — {_student.Firstname} {_student.Lastname}";
-            Size            = new Size(520, 400);
-            StartPosition   = FormStartPosition.CenterParent;
-            FormBorderStyle = FormBorderStyle.Sizable;
-            Font            = new Font("Trebuchet MS", 9f);
-
-            _txt = new RichTextBox
-            {
-                Dock = DockStyle.Fill,
-                Font = new Font("Trebuchet MS", 10f),
-                Text = _student.Notes ?? "",
-            };
-
-            var panel = new Panel { Dock = DockStyle.Bottom, Height = 44, Padding = new Padding(8) };
-            var btnSave = new Button
-            {
-                Text = "Save", Width = 100, Height = 30, Left = 8, Top = 7,
-                BackColor = Color.FromArgb(0, 70, 127), ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-            };
-            btnSave.FlatAppearance.BorderSize = 0;
-            btnSave.Click += OnSave;
-
-            var btnCancel = new Button
-            {
-                Text = "Cancel", Width = 100, Height = 30, Left = 118, Top = 7,
-                FlatStyle = FlatStyle.Flat,
-            };
-            btnCancel.Click += (s, e) => { DialogResult = DialogResult.Cancel; Close(); };
-
-            panel.Controls.AddRange(new Control[] { btnSave, btnCancel });
-            Controls.Add(_txt);
-            Controls.Add(panel);
+            InitializeComponent();
+            Text          = $"Notes — {_student.Firstname} {_student.Lastname}";
+            _editor.Html  = _student.Notes ?? "";
+            _btnSave.FlatAppearance.BorderSize   = 0;
+            _btnCancel.FlatAppearance.BorderSize = 0;
         }
 
         private async void OnSave(object sender, EventArgs e)
         {
+            _savedHtml = _editor.Html;
             try
             {
                 await ApiService.Instance.PutAsync<object>(
                     $"/students/index.php?id={_student.Id}",
-                    new { notes = _txt.Text });
+                    new { notes = _savedHtml });
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -76,6 +48,12 @@ namespace AtRiskTracker.Dialogs
                 MessageBox.Show("Error saving notes: " + ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void OnCancel(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }

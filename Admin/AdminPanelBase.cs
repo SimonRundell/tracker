@@ -18,7 +18,7 @@ using System.Windows.Forms;
 
 namespace AtRiskTracker.Admin
 {
-    public abstract class AdminPanelBase : UserControl
+    public abstract partial class AdminPanelBase : UserControl
     {
         protected DataGridView _grid;
         protected Label        _lblError;

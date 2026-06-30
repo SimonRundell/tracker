@@ -14,7 +14,7 @@ using AtRiskTracker.Services;
 
 namespace AtRiskTracker.Forms.Dashboard
 {
-    public class DashboardPanel : UserControl
+    public partial class DashboardPanel : UserControl
     {
         private ComboBox   _cboCourse;
         private ComboBox   _cboGroup;
@@ -26,15 +26,15 @@ namespace AtRiskTracker.Forms.Dashboard
 
         private List<CourseDto>   _courses   = new List<CourseDto>();
         private List<GroupDto>    _groups    = new List<GroupDto>();
-        private List<QualTypeDto> _qualTypes = new List<QualTypeDto>();
         private GridDataDto       _gridData;
         private CourseDto         _selectedCourse;
         private int?              _selectedGroupId;
 
         public DashboardPanel()
         {
+            InitializeComponent();
             BuildUi();
-            Load  += async (s, e) => await LoadCoursesAsync();
+            Load += async (s, e) => await LoadCoursesAsync();
         }
 
         private void BuildUi()
@@ -128,9 +128,7 @@ namespace AtRiskTracker.Forms.Dashboard
             try
             {
                 var cr = await ApiService.Instance.GetAsync<CoursesResponse>("/courses/index.php");
-                var qt = await ApiService.Instance.GetAsync<QualTypesResponse>("/qualtypes/index.php");
-                _courses   = cr?.Data ?? new List<CourseDto>();
-                _qualTypes = qt?.Data ?? new List<QualTypeDto>();
+                _courses = cr?.Data ?? new List<CourseDto>();
 
                 _cboCourse.Items.Clear();
                 _cboCourse.Items.Add("-- select course --");
@@ -248,7 +246,7 @@ namespace AtRiskTracker.Forms.Dashboard
             else
                 visibleUnits = _gridData.Units;
 
-            var qt = _qualTypes.FirstOrDefault(q => q.Slug == _selectedCourse?.QualType);
+            var qt = QualTypeDto.FromSlug(_selectedCourse?.QualType);
 
             _gradeGrid.LoadData(
                 visibleUnits,

@@ -101,6 +101,29 @@ namespace AtRiskTracker.Models
         [JsonProperty("is_ncfe")]          public int    IsNcfe         { get; set; }
         [JsonProperty("btec_overall_grades")] public int BtecOverallGrades { get; set; }
         public override string ToString() => Name;
+
+        // The backend stores qual_type as a plain string on each course record;
+        // there is no separate qualtypes table or API endpoint. Flags are derived
+        // locally to match the React app's hardcoded logic in GradeGrid.jsx.
+        public static QualTypeDto FromSlug(string slug)
+        {
+            switch (slug ?? "other")
+            {
+                case "btec_ext_dip": return new QualTypeDto { Id=1, Name="BTec Extended Diploma", Slug="btec_ext_dip", ShowPredict=1, IsNcfe=0, BtecOverallGrades=1 };
+                case "ncfe":         return new QualTypeDto { Id=2, Name="NCFE",                  Slug="ncfe",         ShowPredict=0, IsNcfe=1, BtecOverallGrades=0 };
+                case "t_level":      return new QualTypeDto { Id=3, Name="T-Level",               Slug="t_level",      ShowPredict=1, IsNcfe=0, BtecOverallGrades=0 };
+                default:             return new QualTypeDto { Id=4, Name="Other",                  Slug="other",        ShowPredict=0, IsNcfe=0, BtecOverallGrades=0 };
+            }
+        }
+
+        /// <summary>The complete fixed list of supported qual types.</summary>
+        public static List<QualTypeDto> All() => new List<QualTypeDto>
+        {
+            FromSlug("btec_ext_dip"),
+            FromSlug("ncfe"),
+            FromSlug("t_level"),
+            FromSlug("other"),
+        };
     }
 
     public class QualTypesResponse

@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 
 namespace AtRiskTracker.Dialogs
 {
-    public class ObjectivesDialog : Form
+    public partial class ObjectivesDialog : Form
     {
         // Output
         public string SelectedGrade { get; private set; }
@@ -44,6 +44,7 @@ namespace AtRiskTracker.Dialogs
         public ObjectivesDialog(StudentDto student, UnitDto unit, string currentGrade,
             int? rawMark, string qualType)
         {
+            InitializeComponent();
             _student = student;
             _unit    = unit;
             _qualType= qualType ?? "";

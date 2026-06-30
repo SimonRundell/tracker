@@ -13,8 +13,10 @@ using AtRiskTracker.Services;
 
 namespace AtRiskTracker.Admin
 {
-    public class CourseUnitsPanel : AdminPanelBase
+    public partial class CourseUnitsPanel : AdminPanelBase
     {
+        public CourseUnitsPanel() { InitializeComponent(); }
+
         protected override void DefineColumns()
         {
             AddColText("ID",         "id",         0.4f);
@@ -40,7 +42,7 @@ namespace AtRiskTracker.Admin
             var (courses, units) = await LoadCoursesAndUnitsAsync();
             using var dlg = new CourseUnitEditDialog(null, courses, units);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
-            await ApiService.Instance.PostAsync<object>("/courseunits/index.php", dlg.ToPayload());
+            await ApiService.Instance.PostAsync<object>("/courseunits/create.php", dlg.ToPayload());
             await LoadDataAsync();
         }
 
@@ -50,14 +52,16 @@ namespace AtRiskTracker.Admin
             var (courses, units) = await LoadCoursesAndUnitsAsync();
             using var dlg = new CourseUnitEditDialog(cu, courses, units);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
-            await ApiService.Instance.PutAsync<object>($"/courseunits/index.php?id={cu.Id}", dlg.ToPayload());
+            // courseunits uses composite key (course_id + unit_id); no separate id field needed
+            await ApiService.Instance.PutAsync<object>("/courseunits/update.php", dlg.ToPayload());
             await LoadDataAsync();
         }
 
         protected override async Task DeleteItemAsync(DataGridViewRow row)
         {
             if (!(row.Tag is CourseUnitDto cu)) return;
-            await ApiService.Instance.DeleteAsync($"/courseunits/index.php?id={cu.Id}");
+            await ApiService.Instance.DeleteAsync("/courseunits/delete.php",
+                new { course_id = cu.CourseId, unit_id = cu.UnitId });
             await LoadDataAsync();
         }
 
@@ -77,49 +81,4 @@ namespace AtRiskTracker.Admin
         }
     }
 
-    internal class CourseUnitEditDialog : Form
-    {
-        private ComboBox      _cboCourse, _cboUnit;
-        private NumericUpDown _numYear;
-
-        public CourseUnitEditDialog(CourseUnitDto cu, List<CourseDto> courses, List<UnitAdminDto> units)
-        {
-            Text            = cu == null ? "Add Course Unit" : "Edit Course Unit";
-            Size            = new Size(400, 240);
-            StartPosition   = FormStartPosition.CenterParent;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox     = false;
-            Font            = new Font("Trebuchet MS", 9f);
-
-            Controls.Add(new Label { Text="Course", Bounds=new Rectangle(20,15,340,18) });
-            _cboCourse = new ComboBox { DropDownStyle=ComboBoxStyle.DropDownList, Bounds=new Rectangle(20,33,340,24) };
-            _cboCourse.Items.Add("-- select --");
-            foreach (var c in courses) _cboCourse.Items.Add(c);
-            _cboCourse.SelectedIndex=0;
-            if (cu!=null) foreach(CourseDto c in _cboCourse.Items) if(c is CourseDto cd&&cd.Id==cu.CourseId){_cboCourse.SelectedItem=cd;break;}
-            Controls.Add(_cboCourse);
-
-            Controls.Add(new Label { Text="Unit", Bounds=new Rectangle(20,63,340,18) });
-            _cboUnit = new ComboBox { DropDownStyle=ComboBoxStyle.DropDownList, Bounds=new Rectangle(20,81,340,24) };
-            _cboUnit.Items.Add("-- select --");
-            foreach (var u in units) _cboUnit.Items.Add(u);
-            _cboUnit.SelectedIndex=0;
-            if (cu!=null) foreach(UnitAdminDto u in _cboUnit.Items) if(u is UnitAdminDto ud&&ud.Id==cu.UnitId){_cboUnit.SelectedItem=ud;break;}
-            Controls.Add(_cboUnit);
-
-            Controls.Add(new Label { Text="Year Taken", Bounds=new Rectangle(20,111,340,18) });
-            _numYear = new NumericUpDown { Bounds=new Rectangle(20,129,100,24),Minimum=1,Maximum=3,Value=cu?.YearTaken??1 }; Controls.Add(_numYear);
-
-            var ok=new Button{Text="OK",Bounds=new Rectangle(20,163,160,28),BackColor=Color.FromArgb(0,70,127),ForeColor=Color.White,FlatStyle=FlatStyle.Flat,DialogResult=DialogResult.OK};ok.FlatAppearance.BorderSize=0;
-            var cancel=new Button{Text="Cancel",Bounds=new Rectangle(195,163,160,28),FlatStyle=FlatStyle.Flat,DialogResult=DialogResult.Cancel};
-            Controls.AddRange(new Control[]{ok,cancel}); AcceptButton=ok; CancelButton=cancel;
-        }
-
-        public object ToPayload() => new
-        {
-            course_id  = (_cboCourse.SelectedItem is CourseDto c)   ? c.Id  : 0,
-            unit_id    = (_cboUnit.SelectedItem   is UnitAdminDto u) ? u.Id  : 0,
-            year_taken = (int)_numYear.Value,
-        };
-    }
 }

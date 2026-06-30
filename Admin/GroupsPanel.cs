@@ -13,8 +13,10 @@ using AtRiskTracker.Services;
 
 namespace AtRiskTracker.Admin
 {
-    public class GroupsPanel : AdminPanelBase
+    public partial class GroupsPanel : AdminPanelBase
     {
+        public GroupsPanel() { InitializeComponent(); }
+
         protected override void DefineColumns()
         {
             AddColText("ID",         "id",         0.4f);
@@ -45,7 +47,7 @@ namespace AtRiskTracker.Admin
             var courses = await LoadCoursesAsync();
             using var dlg = new GroupEditDialog(null, courses);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
-            await ApiService.Instance.PostAsync<object>("/groups/index.php", dlg.ToPayload());
+            await ApiService.Instance.PostAsync<object>("/groups/create.php", dlg.ToPayload());
             await LoadDataAsync();
         }
 
@@ -55,14 +57,14 @@ namespace AtRiskTracker.Admin
             var courses = await LoadCoursesAsync();
             using var dlg = new GroupEditDialog(g, courses);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
-            await ApiService.Instance.PutAsync<object>($"/groups/index.php?id={g.Id}", dlg.ToPayload());
+            await ApiService.Instance.PutAsync<object>("/groups/update.php", dlg.ToPayload(g.Id));
             await LoadDataAsync();
         }
 
         protected override async Task DeleteItemAsync(DataGridViewRow row)
         {
             if (!(row.Tag is GroupDto g)) return;
-            await ApiService.Instance.DeleteAsync($"/groups/index.php?id={g.Id}");
+            await ApiService.Instance.DeleteAsync("/groups/delete.php", new { id = g.Id });
             await LoadDataAsync();
         }
 
@@ -73,43 +75,4 @@ namespace AtRiskTracker.Admin
         }
     }
 
-    internal class GroupEditDialog : Form
-    {
-        private TextBox  _txtName;
-        private ComboBox _cboCourse;
-
-        public GroupEditDialog(GroupDto g, List<CourseDto> courses)
-        {
-            Text            = g == null ? "Add Group" : "Edit Group";
-            Size            = new Size(380, 200);
-            StartPosition   = FormStartPosition.CenterParent;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox     = false;
-            Font            = new Font("Trebuchet MS", 9f);
-
-            Controls.Add(new Label { Text="Group Name", Bounds=new Rectangle(20,15,320,18) });
-            _txtName = new TextBox { Text=g?.Groupname??"", Bounds=new Rectangle(20,33,320,24) }; Controls.Add(_txtName);
-
-            Controls.Add(new Label { Text="Course", Bounds=new Rectangle(20,65,320,18) });
-            _cboCourse = new ComboBox { DropDownStyle=ComboBoxStyle.DropDownList, Bounds=new Rectangle(20,83,320,24) };
-            _cboCourse.Items.Add("-- select --");
-            foreach (var c in courses) _cboCourse.Items.Add(c);
-            _cboCourse.SelectedIndex = 0;
-            if (g != null)
-                foreach (CourseDto c in _cboCourse.Items)
-                    if (c is CourseDto cd && cd.Id == g.CourseId) { _cboCourse.SelectedItem=cd; break; }
-            Controls.Add(_cboCourse);
-
-            var ok = new Button { Text="OK",Bounds=new Rectangle(20,118,150,28),BackColor=Color.FromArgb(0,70,127),ForeColor=Color.White,FlatStyle=FlatStyle.Flat,DialogResult=DialogResult.OK };
-            ok.FlatAppearance.BorderSize=0;
-            var cancel = new Button { Text="Cancel",Bounds=new Rectangle(185,118,150,28),FlatStyle=FlatStyle.Flat,DialogResult=DialogResult.Cancel };
-            Controls.AddRange(new Control[]{ok,cancel}); AcceptButton=ok; CancelButton=cancel;
-        }
-
-        public object ToPayload() => new
-        {
-            groupname = _txtName.Text.Trim(),
-            course_id = (_cboCourse.SelectedItem is CourseDto c) ? c.Id : 0,
-        };
-    }
 }

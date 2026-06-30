@@ -14,7 +14,7 @@ using AtRiskTracker.Services;
 
 namespace AtRiskTracker.Dialogs
 {
-    public class AssessmentDialog : Form
+    public partial class AssessmentDialog : Form
     {
         private readonly StudentDto _student;
         private readonly UnitDto    _unit;
@@ -40,6 +40,7 @@ namespace AtRiskTracker.Dialogs
 
         public AssessmentDialog(StudentDto student, UnitDto unit)
         {
+            InitializeComponent();
             _student = student;
             _unit    = unit;
             BuildUi();

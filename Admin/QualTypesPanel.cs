@@ -13,8 +13,10 @@ using AtRiskTracker.Services;
 
 namespace AtRiskTracker.Admin
 {
-    public class QualTypesPanel : AdminPanelBase
+    public partial class QualTypesPanel : AdminPanelBase
     {
+        public QualTypesPanel() { InitializeComponent(); }
+
         protected override void DefineColumns()
         {
             AddColText("ID",          "id",      0.4f);
@@ -64,47 +66,4 @@ namespace AtRiskTracker.Admin
         }
     }
 
-    internal class QualTypeEditDialog : Form
-    {
-        private TextBox  _txtName, _txtSlug;
-        private CheckBox _chkPredict, _chkNcfe, _chkBtec;
-
-        public QualTypeEditDialog(QualTypeDto q)
-        {
-            Text            = q == null ? "Add Qual Type" : "Edit Qual Type";
-            Size            = new Size(380, 280);
-            StartPosition   = FormStartPosition.CenterParent;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox     = false;
-            Font            = new Font("Trebuchet MS", 9f);
-
-            int y = 15;
-            Field("Name", ref _txtName, ref y, q?.Name);
-            Field("Slug", ref _txtSlug, ref y, q?.Slug);
-
-            _chkPredict = new CheckBox { Text = "Show Predict", Checked = (q?.ShowPredict ?? 0) != 0, Bounds = new Rectangle(20, y, 200, 22) }; Controls.Add(_chkPredict); y += 26;
-            _chkNcfe    = new CheckBox { Text = "Is NCFE",      Checked = (q?.IsNcfe      ?? 0) != 0, Bounds = new Rectangle(20, y, 200, 22) }; Controls.Add(_chkNcfe); y += 26;
-            _chkBtec    = new CheckBox { Text = "BTec Overall Grades", Checked = (q?.BtecOverallGrades ?? 0) != 0, Bounds = new Rectangle(20, y, 200, 22) }; Controls.Add(_chkBtec); y += 32;
-
-            var ok = new Button { Text="OK", Bounds=new Rectangle(20,y,150,28), BackColor=Color.FromArgb(0,70,127),ForeColor=Color.White,FlatStyle=FlatStyle.Flat,DialogResult=DialogResult.OK };
-            ok.FlatAppearance.BorderSize=0;
-            var cancel = new Button { Text="Cancel", Bounds=new Rectangle(185,y,150,28),FlatStyle=FlatStyle.Flat,DialogResult=DialogResult.Cancel };
-            Controls.AddRange(new Control[]{ok,cancel}); AcceptButton=ok; CancelButton=cancel;
-        }
-
-        private void Field(string lbl, ref TextBox txt, ref int y, string val)
-        {
-            Controls.Add(new Label { Text=lbl, Bounds=new Rectangle(20,y,320,18) }); y+=20;
-            txt = new TextBox { Text=val??"", Bounds=new Rectangle(20,y,320,24) }; Controls.Add(txt); y+=32;
-        }
-
-        public object ToPayload() => new
-        {
-            name               = _txtName.Text.Trim(),
-            slug               = _txtSlug.Text.Trim(),
-            show_predict       = _chkPredict.Checked ? 1 : 0,
-            is_ncfe            = _chkNcfe.Checked ? 1 : 0,
-            btec_overall_grades= _chkBtec.Checked ? 1 : 0,
-        };
-    }
 }

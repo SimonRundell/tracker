@@ -38,7 +38,7 @@ namespace AtRiskTracker.Forms.Dashboard
         public AssessmentRecordDto  Record    { get; set; }
     }
 
-    public class GradeGrid : UserControl
+    public partial class GradeGrid : UserControl
     {
         public event EventHandler<GradeUpdatedArgs>      GradeUpdated;
         public event EventHandler<NotesUpdatedArgs>      NotesUpdated;
@@ -71,6 +71,7 @@ namespace AtRiskTracker.Forms.Dashboard
 
         public GradeGrid()
         {
+            InitializeComponent();
             Dock = DockStyle.Fill;
             _grid = new DataGridView
             {

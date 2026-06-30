@@ -102,12 +102,21 @@ namespace AtRiskTracker.Services
             return JsonConvert.DeserializeObject<T>(body);
         }
 
-        /// <summary>HTTP DELETE.</summary>
+        /// <summary>HTTP DELETE with no body.</summary>
         public async Task DeleteAsync(string path)
         {
             string url = BaseUrl + path;
             var req = BuildRequest(HttpMethod.Delete, url);
             await SendWithRetryAsync(req, url, HttpMethod.Delete);
+        }
+
+        /// <summary>HTTP DELETE with a JSON body (required by endpoints that read id from php://input).</summary>
+        public async Task DeleteAsync(string path, object data)
+        {
+            string url  = BaseUrl + path;
+            string json = JsonConvert.SerializeObject(data);
+            var req = BuildRequest(HttpMethod.Delete, url, json);
+            await SendWithRetryAsync(req, url, HttpMethod.Delete, json);
         }
 
         // ----------------------------------------------------------------

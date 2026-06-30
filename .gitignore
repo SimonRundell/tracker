@@ -1,0 +1,18 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio IDE state
+.vs/
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+
+# Rider
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store

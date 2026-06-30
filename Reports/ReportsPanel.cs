@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 namespace AtRiskTracker.Reports
 {
-    public class ReportsPanel : UserControl
+    public partial class ReportsPanel : UserControl
     {
         private WebBrowser  _browser;
         private ComboBox    _cboCourse;
@@ -42,6 +42,7 @@ namespace AtRiskTracker.Reports
 
         public ReportsPanel()
         {
+            InitializeComponent();
             Dock = DockStyle.Fill;
             BuildUi();
             Load += async (s, e) => await LoadCoursesAsync();

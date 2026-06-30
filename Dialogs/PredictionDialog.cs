@@ -14,7 +14,7 @@ using AtRiskTracker.Utils;
 
 namespace AtRiskTracker.Dialogs
 {
-    public class PredictionDialog : Form
+    public partial class PredictionDialog : Form
     {
         private readonly StudentDto    _student;
         private readonly List<UnitDto> _units;
@@ -27,6 +27,7 @@ namespace AtRiskTracker.Dialogs
 
         public PredictionDialog(StudentDto student, List<UnitDto> units, CourseDto course)
         {
+            InitializeComponent();
             _student = student;
             _units   = units;
             _course  = course;
