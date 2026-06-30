@@ -1,0 +1,13 @@
+D:\tracking\AtRiskTracker\obj\Debug\net472\AtRiskTracker.csproj.AssemblyReference.cache
+D:\tracking\AtRiskTracker\obj\Debug\net472\AtRiskTracker.GeneratedMSBuildEditorConfig.editorconfig
+D:\tracking\AtRiskTracker\obj\Debug\net472\AtRiskTracker.AssemblyInfoInputs.cache
+D:\tracking\AtRiskTracker\obj\Debug\net472\AtRiskTracker.AssemblyInfo.cs
+D:\tracking\AtRiskTracker\obj\Debug\net472\AtRiskTracker.csproj.CoreCompileInputs.cache
+D:\tracking\AtRiskTracker\bin\Debug\net472\config.json
+D:\tracking\AtRiskTracker\bin\Debug\net472\AtRiskTracker.exe.config
+D:\tracking\AtRiskTracker\bin\Debug\net472\AtRiskTracker.exe
+D:\tracking\AtRiskTracker\bin\Debug\net472\AtRiskTracker.pdb
+D:\tracking\AtRiskTracker\bin\Debug\net472\Newtonsoft.Json.dll
+D:\tracking\AtRiskTracker\obj\Debug\net472\AtRiskTr.FDDD8DCC.Up2Date
+D:\tracking\AtRiskTracker\obj\Debug\net472\AtRiskTracker.exe
+D:\tracking\AtRiskTracker\obj\Debug\net472\AtRiskTracker.pdb
