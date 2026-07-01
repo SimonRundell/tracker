@@ -50,14 +50,17 @@ namespace AtRiskTracker.Admin
 
         private void BuildUi()
         {
-            Text            = "Add Enrollment";
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox     = false;
-            MinimizeBox     = false;
-            StartPosition   = FormStartPosition.CenterParent;
-            Size            = new Size(440, 420);
-            Font            = new Font("Trebuchet MS", 9f);
-            BackColor       = Color.White;
+            Text                 = "Add Enrollment";
+            FormBorderStyle      = FormBorderStyle.FixedDialog;
+            MaximizeBox          = false;
+            MinimizeBox          = false;
+            StartPosition        = FormStartPosition.CenterParent;
+            AutoScaleDimensions  = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode        = AutoScaleMode.Font;
+            ClientSize           = new Size(428, 390);
+            Font                 = new Font("Trebuchet MS", 9f);
+            BackColor            = Color.White;
+            SuspendLayout();
 
             int y = 12;
 
@@ -113,7 +116,8 @@ namespace AtRiskTracker.Admin
                 UseVisualStyleBackColor = false,
                 DialogResult = DialogResult.None,
             };
-            _btnOk.FlatAppearance.BorderColor = Color.FromArgb(0, 80, 0);
+            _btnOk.FlatAppearance.BorderSize  = 0;
+            _btnOk.Paint += PaintColoredButton;
             _btnOk.Click += OnOk;
             Controls.Add(_btnOk);
 
@@ -126,6 +130,20 @@ namespace AtRiskTracker.Admin
 
             AcceptButton = _btnOk;
             CancelButton = _btnCancel;
+
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        // Forces background + text paint — works around Win11 FlatStyle text suppression.
+        private static void PaintColoredButton(object sender, PaintEventArgs e)
+        {
+            var btn  = (Button)sender;
+            var rect = btn.ClientRectangle;
+            using (var brush = new SolidBrush(btn.BackColor))
+                e.Graphics.FillRectangle(brush, rect);
+            TextRenderer.DrawText(e.Graphics, btn.Text, btn.Font, rect, btn.ForeColor,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
 
         // ----------------------------------------------------------------

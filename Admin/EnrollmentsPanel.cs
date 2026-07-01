@@ -188,7 +188,15 @@ namespace AtRiskTracker.Admin
                 UseVisualStyleBackColor = false,
                 DialogResult = DialogResult.OK,
             };
-            btnOk.FlatAppearance.BorderColor = Color.FromArgb(0, 80, 0);
+            btnOk.FlatAppearance.BorderSize = 0;
+            btnOk.Paint += (s, pe) =>
+            {
+                var b = (Button)s;
+                using (var br = new SolidBrush(b.BackColor))
+                    pe.Graphics.FillRectangle(br, b.ClientRectangle);
+                TextRenderer.DrawText(pe.Graphics, b.Text, b.Font, b.ClientRectangle,
+                    b.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            };
             var btnCancel = new Button
             {
                 Text = "Cancel", Left = 234, Top = 72, Width = 80, Height = 28,
