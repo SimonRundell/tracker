@@ -184,13 +184,15 @@ namespace AtRiskTracker.Admin
             {
                 Text = "Save", Left = 148, Top = 72, Width = 80, Height = 28,
                 BackColor = Color.FromArgb(0, 110, 0), ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat, DialogResult = DialogResult.OK,
+                FlatStyle = FlatStyle.Flat,
+                UseVisualStyleBackColor = false,
+                DialogResult = DialogResult.OK,
             };
-            btnOk.FlatAppearance.BorderSize = 0;
+            btnOk.FlatAppearance.BorderColor = Color.FromArgb(0, 80, 0);
             var btnCancel = new Button
             {
                 Text = "Cancel", Left = 234, Top = 72, Width = 80, Height = 28,
-                FlatStyle = FlatStyle.Flat, DialogResult = DialogResult.Cancel,
+                DialogResult = DialogResult.Cancel,
             };
 
             f.Controls.AddRange(new Control[] { lbl, cbo, btnOk, btnCancel });

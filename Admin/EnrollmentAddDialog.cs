@@ -109,18 +109,19 @@ namespace AtRiskTracker.Admin
             {
                 Text = "Enrol", Left = 236, Top = y - 2, Width = 88, Height = 28,
                 BackColor = Color.FromArgb(0, 110, 0), ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat, DialogResult = DialogResult.None,
+                FlatStyle = FlatStyle.Flat,
+                UseVisualStyleBackColor = false,
+                DialogResult = DialogResult.None,
             };
-            _btnOk.FlatAppearance.BorderSize = 0;
+            _btnOk.FlatAppearance.BorderColor = Color.FromArgb(0, 80, 0);
             _btnOk.Click += OnOk;
             Controls.Add(_btnOk);
 
             _btnCancel = new Button
             {
                 Text = "Cancel", Left = 330, Top = y - 2, Width = 88, Height = 28,
-                FlatStyle = FlatStyle.Flat, DialogResult = DialogResult.Cancel,
+                DialogResult = DialogResult.Cancel,
             };
-            _btnCancel.FlatAppearance.BorderSize = 0;
             Controls.Add(_btnCancel);
 
             AcceptButton = _btnOk;
