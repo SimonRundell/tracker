@@ -104,8 +104,8 @@ namespace AtRiskTracker.Forms.Dashboard
                 RowTemplate = { Height = 26 },
             };
 
-            _grid.CellClick  += OnCellClick;
-            _grid.CellPainting += OnCellPainting;
+            _grid.CellMouseDown += OnCellMouseDown;
+            _grid.CellPainting  += OnCellPainting;
             Controls.Add(_grid);
         }
 
@@ -275,10 +275,11 @@ namespace AtRiskTracker.Forms.Dashboard
         }
 
         // ----------------------------------------------------------------
-        // Cell click — open appropriate dialog
+        // Cell mouse — left-click on name cols opens notes;
+        //              right-click on unit/predict cols shows context menu
         // ----------------------------------------------------------------
 
-        private void OnCellClick(object sender, DataGridViewCellEventArgs e)
+        private void OnCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
@@ -286,39 +287,129 @@ namespace AtRiskTracker.Forms.Dashboard
             var student = row.Tag as StudentDto;
             if (student == null) return;
 
-            int col          = e.ColumnIndex;
-            int unitStartCol = FixedCols;
-            int unitEndCol   = unitStartCol + (_units?.Count ?? 0) - 1;
-            bool showPredict = _qualType?.ShowPredict != 0;
-            bool isNcfe      = _qualType?.IsNcfe != 0;
+            int  col          = e.ColumnIndex;
+            int  unitStartCol = FixedCols;
+            int  unitEndCol   = unitStartCol + (_units?.Count ?? 0) - 1;
+            bool showPredict  = _qualType?.ShowPredict != 0;
 
-            // CIS/Name/concern columns → open notes
-            if (col <= 2)
+            // Left-click on CIS / Forename / Surname → open notes
+            if (e.Button == MouseButtons.Left && col <= 2)
             {
                 OpenNotes(student);
                 return;
             }
 
-            // Overall column (7)
-            if (col == 7) return;
-
-            // Unit columns
-            if (col >= unitStartCol && col <= unitEndCol)
+            // Right-click on a unit column → grade/milestone context menu
+            if (e.Button == MouseButtons.Right && col >= unitStartCol && col <= unitEndCol)
             {
+                _grid.ClearSelection();
+                _grid.Rows[e.RowIndex].Cells[col].Selected = true;
                 var unit = _units[col - unitStartCol];
-                if (unit.AssessmentDefs != null && unit.AssessmentDefs.Count > 0)
-                    OpenAssessments(student, unit);
-                else
-                    OpenObjectives(student, unit);
+                ShowUnitContextMenu(student, unit, e.RowIndex, col);
                 return;
             }
 
-            // Predict column
-            if (showPredict && col == unitEndCol + 1)
+            // Right-click on the Predict column
+            if (e.Button == MouseButtons.Right && showPredict && col == unitEndCol + 1)
             {
                 OpenPrediction(student);
                 return;
             }
+        }
+
+        private void ShowUnitContextMenu(StudentDto student, UnitDto unit, int rowIndex, int colIndex)
+        {
+            bool hasAssessments = unit.AssessmentDefs != null && unit.AssessmentDefs.Count > 0;
+
+            var menu = new ContextMenuStrip { Font = new Font("Trebuchet MS", 9f) };
+
+            var miGrade = new ToolStripMenuItem("Change Grade / Criteria...");
+            miGrade.Click += (s, e) => OpenObjectives(student, unit);
+
+            var miMilestone = new ToolStripMenuItem("Assessment Milestones...");
+            miMilestone.Enabled = hasAssessments;
+            miMilestone.Click += (s, e) => OpenAssessments(student, unit);
+
+            var miSep = new ToolStripSeparator();
+
+            var miBulkDate = new ToolStripMenuItem("Set Assignment Date for All Students...");
+            miBulkDate.Click += async (s, e) => await OpenBulkDateSetAsync(unit);
+
+            menu.Items.Add(miGrade);
+            menu.Items.Add(miMilestone);
+            menu.Items.Add(miSep);
+            menu.Items.Add(miBulkDate);
+
+            Rectangle cellRect = _grid.GetCellDisplayRectangle(colIndex, rowIndex, false);
+            Point screenPt = _grid.PointToScreen(new Point(cellRect.Left, cellRect.Bottom));
+            menu.Show(screenPt);
+        }
+
+        private async System.Threading.Tasks.Task OpenBulkDateSetAsync(UnitDto unit)
+        {
+            if (unit.AssessmentDefs == null || unit.AssessmentDefs.Count == 0)
+            {
+                MessageBox.Show(
+                    $"No assessment parts are configured for {unit.Unitcode}.\n\n" +
+                    "Add assessment definitions via Admin → Units before setting bulk dates.",
+                    "No Assessment Parts", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using var dlg = new Dialogs.BulkDateDialog(unit);
+            if (dlg.ShowDialog(FindForm()) != System.Windows.Forms.DialogResult.OK) return;
+
+            int applied = 0, skipped = 0, failed = 0;
+
+            foreach (var student in _students)
+            {
+                // Build the list of def IDs to update for this student
+                var updates = new List<object>();
+                foreach (int defId in dlg.SelectedDefIds)
+                {
+                    // When not overwriting, skip students who already have a date_set
+                    if (!dlg.OverwriteAll &&
+                        student.Assessments != null &&
+                        student.Assessments.TryGetValue(defId.ToString(), out var existing) &&
+                        !string.IsNullOrEmpty(existing?.DateSet))
+                    {
+                        skipped++;
+                        continue;
+                    }
+                    updates.Add(new
+                    {
+                        assessment_def_id = defId,
+                        status            = "SET",
+                        date_set          = dlg.DateSet,
+                        date_deadline     = (string)null,
+                        date_resubmission = (string)null,
+                        date_completed    = (string)null,
+                    });
+                }
+
+                if (updates.Count == 0) continue;
+
+                try
+                {
+                    await Services.ApiService.Instance.PutAsync<object>("/assessments/update.php", new
+                    {
+                        student_id = student.Id,
+                        updates,
+                    });
+                    applied++;
+                }
+                catch { failed++; }
+            }
+
+            string displayDate = DateTime.TryParseExact(dlg.DateSet, "yyyy-MM-dd", null,
+                System.Globalization.DateTimeStyles.None, out var pd)
+                ? pd.ToString("dd/MM/yyyy") : dlg.DateSet;
+            string msg = $"Assignment date {displayDate} applied to {applied} student(s).";
+            if (skipped > 0) msg += $"\n{skipped} record(s) skipped (already set).";
+            if (failed  > 0) msg += $"\n{failed} student(s) could not be updated.";
+
+            MessageBox.Show(msg, "Done", MessageBoxButtons.OK,
+                failed > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
         }
 
         // ----------------------------------------------------------------

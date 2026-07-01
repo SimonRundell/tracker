@@ -12,23 +12,25 @@ namespace AtRiskTracker.Admin
 
         private void InitializeComponent()
         {
-            this._tabs          = new System.Windows.Forms.TabControl();
-            this._pgStudents    = new System.Windows.Forms.TabPage();
-            this._pgCourses     = new System.Windows.Forms.TabPage();
-            this._pgGroups      = new System.Windows.Forms.TabPage();
-            this._pgUnits       = new System.Windows.Forms.TabPage();
-            this._pgCourseUnits = new System.Windows.Forms.TabPage();
-            this._pgObjectives  = new System.Windows.Forms.TabPage();
-            this._pgConcerns    = new System.Windows.Forms.TabPage();
-            this._pgUsers       = new System.Windows.Forms.TabPage();
-            this._pnlStudents    = new StudentsPanel();
-            this._pnlCourses     = new CoursesPanel();
-            this._pnlGroups      = new GroupsPanel();
-            this._pnlUnits       = new UnitsPanel();
-            this._pnlCourseUnits = new CourseUnitsPanel();
-            this._pnlObjectives  = new ObjectivesPanel();
-            this._pnlConcerns    = new ConcernsPanel();
-            this._pnlUsers       = new UsersPanel();
+            this._tabs                = new System.Windows.Forms.TabControl();
+            this._pgStudents          = new System.Windows.Forms.TabPage();
+            this._pgCourses           = new System.Windows.Forms.TabPage();
+            this._pgGroups            = new System.Windows.Forms.TabPage();
+            this._pgUnits             = new System.Windows.Forms.TabPage();
+            this._pgCourseUnits       = new System.Windows.Forms.TabPage();
+            this._pgObjectives        = new System.Windows.Forms.TabPage();
+            this._pgAssessmentDefs    = new System.Windows.Forms.TabPage();
+            this._pgConcerns          = new System.Windows.Forms.TabPage();
+            this._pgUsers             = new System.Windows.Forms.TabPage();
+            this._pnlStudents         = new StudentsPanel();
+            this._pnlCourses          = new CoursesPanel();
+            this._pnlGroups           = new GroupsPanel();
+            this._pnlUnits            = new UnitsPanel();
+            this._pnlCourseUnits      = new CourseUnitsPanel();
+            this._pnlObjectives       = new ObjectivesPanel();
+            this._pnlAssessmentDefs   = new AssessmentDefsPanel();
+            this._pnlConcerns         = new ConcernsPanel();
+            this._pnlUsers            = new UsersPanel();
             this._tabs.SuspendLayout();
             this._pgStudents.SuspendLayout();
             this._pgCourses.SuspendLayout();
@@ -36,6 +38,7 @@ namespace AtRiskTracker.Admin
             this._pgUnits.SuspendLayout();
             this._pgCourseUnits.SuspendLayout();
             this._pgObjectives.SuspendLayout();
+            this._pgAssessmentDefs.SuspendLayout();
             this._pgConcerns.SuspendLayout();
             this._pgUsers.SuspendLayout();
             this.SuspendLayout();
@@ -48,6 +51,7 @@ namespace AtRiskTracker.Admin
             this._tabs.Controls.Add(this._pgUnits);
             this._tabs.Controls.Add(this._pgCourseUnits);
             this._tabs.Controls.Add(this._pgObjectives);
+            this._tabs.Controls.Add(this._pgAssessmentDefs);
             this._tabs.Controls.Add(this._pgConcerns);
             this._tabs.Controls.Add(this._pgUsers);
             this._tabs.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -120,6 +124,17 @@ namespace AtRiskTracker.Admin
             this._pnlObjectives.Dock = System.Windows.Forms.DockStyle.Fill;
             this._pnlObjectives.Name = "_pnlObjectives";
             //
+            // _pgAssessmentDefs
+            //
+            this._pgAssessmentDefs.Controls.Add(this._pnlAssessmentDefs);
+            this._pgAssessmentDefs.Name = "_pgAssessmentDefs";
+            this._pgAssessmentDefs.Text = "Assessments";
+            //
+            // _pnlAssessmentDefs
+            //
+            this._pnlAssessmentDefs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._pnlAssessmentDefs.Name = "_pnlAssessmentDefs";
+            //
             // _pgConcerns
             //
             this._pgConcerns.Controls.Add(this._pnlConcerns);
@@ -155,6 +170,7 @@ namespace AtRiskTracker.Admin
             this._pgUnits.ResumeLayout(false);
             this._pgCourseUnits.ResumeLayout(false);
             this._pgObjectives.ResumeLayout(false);
+            this._pgAssessmentDefs.ResumeLayout(false);
             this._pgConcerns.ResumeLayout(false);
             this._pgUsers.ResumeLayout(false);
             this._tabs.ResumeLayout(false);
@@ -168,15 +184,17 @@ namespace AtRiskTracker.Admin
         private System.Windows.Forms.TabPage     _pgUnits;
         private System.Windows.Forms.TabPage     _pgCourseUnits;
         private System.Windows.Forms.TabPage     _pgObjectives;
+        private System.Windows.Forms.TabPage     _pgAssessmentDefs;
         private System.Windows.Forms.TabPage     _pgConcerns;
         private System.Windows.Forms.TabPage     _pgUsers;
-        private StudentsPanel    _pnlStudents;
-        private CoursesPanel     _pnlCourses;
-        private GroupsPanel      _pnlGroups;
-        private UnitsPanel       _pnlUnits;
-        private CourseUnitsPanel _pnlCourseUnits;
-        private ObjectivesPanel  _pnlObjectives;
-        private ConcernsPanel    _pnlConcerns;
-        private UsersPanel       _pnlUsers;
+        private StudentsPanel         _pnlStudents;
+        private CoursesPanel          _pnlCourses;
+        private GroupsPanel           _pnlGroups;
+        private UnitsPanel            _pnlUnits;
+        private CourseUnitsPanel      _pnlCourseUnits;
+        private ObjectivesPanel       _pnlObjectives;
+        private AssessmentDefsPanel   _pnlAssessmentDefs;
+        private ConcernsPanel         _pnlConcerns;
+        private UsersPanel            _pnlUsers;
     }
 }

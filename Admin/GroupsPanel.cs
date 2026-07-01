@@ -37,6 +37,7 @@ namespace AtRiskTracker.Admin
             AddColText("ID",         "id",         0.4f);
             AddColText("Group Name", "groupname",  2f);
             AddColText("Course",     "course",     2f);
+            HideIdColumn();
         }
 
         protected override async Task LoadDataAsync()

@@ -32,6 +32,9 @@ namespace AtRiskTracker.Admin
 {
     public partial class ObjectivesPanel : UserControl
     {
+        // ── main layout ───────────────────────────────────────────────────────
+        private SplitContainer _mainSplit;
+
         // ── left pane controls ────────────────────────────────────────────────
         private TextBox  _txtFilter;
         private TreeView _treeUnits;
@@ -77,6 +80,24 @@ namespace AtRiskTracker.Admin
             Dock = DockStyle.Fill;
             Font = new Font("Trebuchet MS", 9f);
             BuildUi();
+
+            // Set left pane to ~33 % once the panel has a real width.
+            // Use a flag so we only do this once; try-catch because intermediate
+            // sizing events can produce a width that briefly violates min-size constraints.
+            bool splitSet = false;
+            _mainSplit.SizeChanged += (s, e) =>
+            {
+                if (splitSet) return;
+                int dist = _mainSplit.Width / 3;
+                int min  = _mainSplit.Panel1MinSize;
+                int max  = _mainSplit.Width - _mainSplit.Panel2MinSize - _mainSplit.SplitterWidth;
+                if (dist < 120 || dist > _mainSplit.Width - 120 - _mainSplit.SplitterWidth) return;
+                _mainSplit.Panel1MinSize = 120;
+                _mainSplit.Panel2MinSize = 120;
+                _mainSplit.SplitterDistance = dist;
+                splitSet = true;
+            };
+
             Load += async (s, e) => await LoadAllAsync();
         }
 
@@ -84,19 +105,17 @@ namespace AtRiskTracker.Admin
 
         private void BuildUi()
         {
-            // Main horizontal split: unit tree on left, detail on right
-            var mainSplit = new SplitContainer
+            // Main horizontal split: unit tree (~33%) on left, detail (~67%) on right
+            _mainSplit = new SplitContainer
             {
-                Dock             = DockStyle.Fill,
-                Orientation      = Orientation.Vertical,
-                SplitterDistance = 240,
-                FixedPanel       = FixedPanel.Panel1,
+                Dock        = DockStyle.Fill,
+                Orientation = Orientation.Vertical,
             };
 
-            BuildLeftPane(mainSplit.Panel1);
-            BuildRightPane(mainSplit.Panel2);
+            BuildLeftPane(_mainSplit.Panel1);
+            BuildRightPane(_mainSplit.Panel2);
 
-            Controls.Add(mainSplit);
+            Controls.Add(_mainSplit);
         }
 
         private void BuildLeftPane(SplitterPanel panel)
@@ -179,9 +198,20 @@ namespace AtRiskTracker.Admin
             // Detail split: sections on top, criteria on bottom
             var detailSplit = new SplitContainer
             {
-                Dock             = DockStyle.Fill,
-                Orientation      = Orientation.Horizontal,
-                SplitterDistance = 180,
+                Dock        = DockStyle.Fill,
+                Orientation = Orientation.Horizontal,
+            };
+            // Defer SplitterDistance until the container has real height
+            bool detailSplitSet = false;
+            detailSplit.SizeChanged += (s, e) =>
+            {
+                if (detailSplitSet) return;
+                int dist = 180;
+                int min  = detailSplit.Panel1MinSize;
+                int max  = detailSplit.Height - detailSplit.Panel2MinSize - detailSplit.SplitterWidth;
+                if (max < min || dist < min || dist > max) return;
+                detailSplit.SplitterDistance = dist;
+                detailSplitSet = true;
             };
 
             BuildSectionsPane(detailSplit.Panel1);
@@ -231,7 +261,7 @@ namespace AtRiskTracker.Admin
                 ("Title",  "title",      3.5f),
                 ("Order",  "sort_order", 0.5f),
             });
-            _gridSections.SelectionChanged += (s, e) => OnSectionSelected();
+            _gridSections.SelectionChanged += OnSectionSelectedHandler;
 
             panel.Controls.Add(_gridSections);
             panel.Controls.Add(toolbar);
@@ -475,13 +505,24 @@ namespace AtRiskTracker.Admin
 
         private void PopulateSectionsGrid()
         {
+            _gridSections.SelectionChanged -= OnSectionSelectedHandler;
             _gridSections.Rows.Clear();
             foreach (var sec in _sections.OrderBy(s => s.SortOrder))
             {
-                int ri = _gridSections.Rows.Add(sec.SectionLabel, sec.SectionTitle, sec.SortOrder);
-                _gridSections.Rows[ri].Tag = sec;
+                var row = new DataGridViewRow();
+                row.CreateCells(_gridSections, sec.SectionLabel, sec.SectionTitle ?? "", sec.SortOrder);
+                row.Tag = sec;
+                _gridSections.Rows.Add(row);
             }
+            if (_gridSections.Rows.Count > 0)
+                _gridSections.Rows[0].Selected = true;
+            _gridSections.SelectionChanged += OnSectionSelectedHandler;
+
+            // Drive criteria population directly — SelectionChanged timing is unreliable here.
+            OnSectionSelected();
         }
+
+        private void OnSectionSelectedHandler(object sender, EventArgs e) => OnSectionSelected();
 
         private void OnSectionSelected()
         {

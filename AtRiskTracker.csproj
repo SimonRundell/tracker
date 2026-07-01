@@ -56,6 +56,13 @@
       <DependentUpon>AssessmentDialog.cs</DependentUpon>
     </Compile>
 
+    <Compile Update="Dialogs\BulkDateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\BulkDateDialog.Designer.cs">
+      <DependentUpon>BulkDateDialog.cs</DependentUpon>
+    </Compile>
+
     <Compile Update="Dialogs\NotesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +155,14 @@
       <DependentUpon>UserEditDialog.cs</DependentUpon>
     </Compile>
 
+    <!-- Admin edit dialogs (continued) -->
+    <Compile Update="Admin\AssessmentDefEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\AssessmentDefEditDialog.Designer.cs">
+      <DependentUpon>AssessmentDefEditDialog.cs</DependentUpon>
+    </Compile>
+
     <!-- Admin panels (UserControl subclasses) -->
     <Compile Update="Admin\AdminPanelBase.cs">
       <SubType>UserControl</SubType>
@@ -189,6 +204,13 @@
     </Compile>
     <Compile Update="Admin\GroupsPanel.Designer.cs">
       <DependentUpon>GroupsPanel.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Admin\AssessmentDefsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Admin\AssessmentDefsPanel.Designer.cs">
+      <DependentUpon>AssessmentDefsPanel.cs</DependentUpon>
     </Compile>
 
     <Compile Update="Admin\ObjectivesPanel.cs">

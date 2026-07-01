@@ -3,6 +3,7 @@
  *
  * © 2026 Exeter College — Creative Commons NC-BY-SA 4.0
  */
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AtRiskTracker.Models;
@@ -13,20 +14,24 @@ namespace AtRiskTracker.Admin
     {
         private static readonly string[] Roles = { "staff", "admin" };
 
-        public UserEditDialog() { InitializeComponent(); }
+        public UserEditDialog()
+        {
+            InitializeComponent();
+            // Populate role items here so every constructor path has them
+            foreach (string r in Roles) _cboRole.Items.Add(r);
+            _cboRole.SelectedIndex = 0;
+        }
 
         public UserEditDialog(UserAdminDto u) : this()
         {
-            foreach (string r in Roles) _cboRole.Items.Add(r);
-            _cboRole.SelectedItem = "staff";
-
             if (u != null)
             {
-                Text            = "Edit User";
-                _txtName.Text   = u.Fullname;
-                _txtEmail.Text  = u.Email;
-                _cboRole.SelectedItem = u.Role ?? "staff";
+                Text              = "Edit User";
+                _txtName.Text     = u.Fullname;
+                _txtEmail.Text    = u.Email;
                 _lblPassword.Text = "Password (leave blank to keep)";
+                int ri = Array.IndexOf(Roles, u.Role ?? "staff");
+                _cboRole.SelectedIndex = ri >= 0 ? ri : 0;
             }
         }
 

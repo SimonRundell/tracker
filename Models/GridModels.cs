@@ -11,7 +11,7 @@ namespace AtRiskTracker.Models
     public class AssessmentDefDto
     {
         [JsonProperty("id")]          public int    Id         { get; set; }
-        [JsonProperty("title")]       public string Title      { get; set; }
+        [JsonProperty("part_name")]   public string Title      { get; set; }
         [JsonProperty("description")] public string Description { get; set; }
         [JsonProperty("max_mark")]    public int?   MaxMark    { get; set; }
     }
@@ -30,11 +30,15 @@ namespace AtRiskTracker.Models
 
     public class AssessmentRecordDto
     {
-        [JsonProperty("id")]       public int?   Id       { get; set; }
-        [JsonProperty("mark")]     public int?   Mark     { get; set; }
-        [JsonProperty("grade")]    public string Grade    { get; set; }
-        [JsonProperty("feedback")] public string Feedback { get; set; }
-        [JsonProperty("status")]   public string Status   { get; set; }
+        [JsonProperty("id")]                public int?   Id              { get; set; }
+        [JsonProperty("mark")]              public int?   Mark            { get; set; }
+        [JsonProperty("grade")]             public string Grade           { get; set; }
+        [JsonProperty("feedback")]          public string Feedback        { get; set; }
+        [JsonProperty("status")]            public string Status          { get; set; }
+        [JsonProperty("date_set")]          public string DateSet         { get; set; }
+        [JsonProperty("date_deadline")]     public string DateDeadline    { get; set; }
+        [JsonProperty("date_resubmission")] public string DateResubmission { get; set; }
+        [JsonProperty("date_completed")]    public string DateCompleted   { get; set; }
     }
 
     public class StudentDto

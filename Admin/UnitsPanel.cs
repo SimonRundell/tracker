@@ -40,6 +40,7 @@ namespace AtRiskTracker.Admin
             AddColText("Credits",  "credits",   0.5f);
             AddColText("GLH",      "glh",       0.5f);
             AddColText("External", "external",  0.6f);
+            HideIdColumn();
         }
 
         protected override async Task LoadDataAsync()

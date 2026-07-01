@@ -14,7 +14,11 @@ namespace AtRiskTracker.Forms
         public LoginForm()
         {
             InitializeComponent();
+            if (Program.AppIcon != null) Icon = Program.AppIcon;
             _btnLogin.FlatAppearance.BorderSize = 0;
+            // TODO: remove before release
+            _txtEmail.Text    = "simonrundell@exe-coll.ac.uk";
+            _txtPassword.Text = "f3oHCjb7";
             _txtEmail.Focus();
         }
 
@@ -37,7 +41,9 @@ namespace AtRiskTracker.Forms
             }
             catch (Exception ex)
             {
-                _lblError.Text    = ex.Message;
+                _lblError.Text = ex.Message.Contains("401")
+                    ? "Login or password incorrect — please try again."
+                    : ex.Message;
                 _btnLogin.Enabled = true;
                 _btnLogin.Text    = "Sign In";
             }

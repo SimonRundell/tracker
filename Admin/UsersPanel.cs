@@ -44,6 +44,7 @@ namespace AtRiskTracker.Admin
             AddColText("Name",     "fullname", 2f);
             AddColText("Email",    "email",    2.5f);
             AddColText("Role",     "role",     0.8f);
+            HideIdColumn();
         }
 
         protected override async Task LoadDataAsync()

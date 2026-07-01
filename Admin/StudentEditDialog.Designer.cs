@@ -12,14 +12,18 @@ namespace AtRiskTracker.Admin
 
         private void InitializeComponent()
         {
-            this._lblCis    = new System.Windows.Forms.Label();
-            this._txtCis    = new System.Windows.Forms.TextBox();
-            this._lblFirst  = new System.Windows.Forms.Label();
-            this._txtFirst  = new System.Windows.Forms.TextBox();
-            this._lblLast   = new System.Windows.Forms.Label();
-            this._txtLast   = new System.Windows.Forms.TextBox();
-            this._btnOk     = new System.Windows.Forms.Button();
-            this._btnCancel = new System.Windows.Forms.Button();
+            this._lblCis     = new System.Windows.Forms.Label();
+            this._txtCis     = new System.Windows.Forms.TextBox();
+            this._lblFirst   = new System.Windows.Forms.Label();
+            this._txtFirst   = new System.Windows.Forms.TextBox();
+            this._lblLast    = new System.Windows.Forms.Label();
+            this._txtLast    = new System.Windows.Forms.TextBox();
+            this._lblConcern = new System.Windows.Forms.Label();
+            this._cboConcern = new System.Windows.Forms.ComboBox();
+            this._lblNotes   = new System.Windows.Forms.Label();
+            this._txtNotes   = new System.Windows.Forms.TextBox();
+            this._btnOk      = new System.Windows.Forms.Button();
+            this._btnCancel  = new System.Windows.Forms.Button();
             this.SuspendLayout();
             //
             // _lblCis
@@ -61,14 +65,43 @@ namespace AtRiskTracker.Admin
             this._txtLast.Name     = "_txtLast";
             this._txtLast.Size     = new System.Drawing.Size(340, 24);
             //
+            // _lblConcern
+            //
+            this._lblConcern.Location = new System.Drawing.Point(20, 176);
+            this._lblConcern.Name     = "_lblConcern";
+            this._lblConcern.Size     = new System.Drawing.Size(340, 18);
+            this._lblConcern.Text     = "Concern";
+            //
+            // _cboConcern
+            //
+            this._cboConcern.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cboConcern.Location      = new System.Drawing.Point(20, 196);
+            this._cboConcern.Name          = "_cboConcern";
+            this._cboConcern.Size          = new System.Drawing.Size(340, 24);
+            //
+            // _lblNotes
+            //
+            this._lblNotes.Location = new System.Drawing.Point(20, 228);
+            this._lblNotes.Name     = "_lblNotes";
+            this._lblNotes.Size     = new System.Drawing.Size(340, 18);
+            this._lblNotes.Text     = "Notes";
+            //
+            // _txtNotes
+            //
+            this._txtNotes.Location   = new System.Drawing.Point(20, 248);
+            this._txtNotes.Multiline  = true;
+            this._txtNotes.Name       = "_txtNotes";
+            this._txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this._txtNotes.Size       = new System.Drawing.Size(340, 90);
+            //
             // _btnOk
             //
             this._btnOk.BackColor = System.Drawing.Color.FromArgb(0, 70, 127);
             this._btnOk.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._btnOk.ForeColor = System.Drawing.Color.White;
-            this._btnOk.Location  = new System.Drawing.Point(20, 176);
+            this._btnOk.Location  = new System.Drawing.Point(20, 350);
             this._btnOk.Name      = "_btnOk";
-            this._btnOk.Size      = new System.Drawing.Size(150, 30);
+            this._btnOk.Size      = new System.Drawing.Size(160, 30);
             this._btnOk.Text      = "OK";
             this._btnOk.UseVisualStyleBackColor   = false;
             this._btnOk.FlatAppearance.BorderSize = 0;
@@ -77,9 +110,9 @@ namespace AtRiskTracker.Admin
             // _btnCancel
             //
             this._btnCancel.FlatStyle    = System.Windows.Forms.FlatStyle.Flat;
-            this._btnCancel.Location     = new System.Drawing.Point(185, 176);
+            this._btnCancel.Location     = new System.Drawing.Point(200, 350);
             this._btnCancel.Name         = "_btnCancel";
-            this._btnCancel.Size         = new System.Drawing.Size(150, 30);
+            this._btnCancel.Size         = new System.Drawing.Size(160, 30);
             this._btnCancel.Text         = "Cancel";
             this._btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             //
@@ -89,13 +122,17 @@ namespace AtRiskTracker.Admin
             this.CancelButton        = this._btnCancel;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode       = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize          = new System.Drawing.Size(382, 224);
+            this.ClientSize          = new System.Drawing.Size(382, 396);
             this.Controls.Add(this._lblCis);
             this.Controls.Add(this._txtCis);
             this.Controls.Add(this._lblFirst);
             this.Controls.Add(this._txtFirst);
             this.Controls.Add(this._lblLast);
             this.Controls.Add(this._txtLast);
+            this.Controls.Add(this._lblConcern);
+            this.Controls.Add(this._cboConcern);
+            this.Controls.Add(this._lblNotes);
+            this.Controls.Add(this._txtNotes);
             this.Controls.Add(this._btnOk);
             this.Controls.Add(this._btnCancel);
             this.Font            = new System.Drawing.Font("Trebuchet MS", 9F);
@@ -109,13 +146,17 @@ namespace AtRiskTracker.Admin
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.Label   _lblCis;
-        private System.Windows.Forms.TextBox _txtCis;
-        private System.Windows.Forms.Label   _lblFirst;
-        private System.Windows.Forms.TextBox _txtFirst;
-        private System.Windows.Forms.Label   _lblLast;
-        private System.Windows.Forms.TextBox _txtLast;
-        private System.Windows.Forms.Button  _btnOk;
-        private System.Windows.Forms.Button  _btnCancel;
+        private System.Windows.Forms.Label    _lblCis;
+        private System.Windows.Forms.TextBox  _txtCis;
+        private System.Windows.Forms.Label    _lblFirst;
+        private System.Windows.Forms.TextBox  _txtFirst;
+        private System.Windows.Forms.Label    _lblLast;
+        private System.Windows.Forms.TextBox  _txtLast;
+        private System.Windows.Forms.Label    _lblConcern;
+        private System.Windows.Forms.ComboBox _cboConcern;
+        private System.Windows.Forms.Label    _lblNotes;
+        private System.Windows.Forms.TextBox  _txtNotes;
+        private System.Windows.Forms.Button   _btnOk;
+        private System.Windows.Forms.Button   _btnCancel;
     }
 }

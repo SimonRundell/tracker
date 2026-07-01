@@ -14,6 +14,7 @@ namespace AtRiskTracker.Forms
         public MainForm()
         {
             InitializeComponent();
+            if (Program.AppIcon != null) Icon = Program.AppIcon;
             _lblUser.Text = $"Logged in as: {ApiService.Instance.CurrentUser?.Fullname}";
         }
 

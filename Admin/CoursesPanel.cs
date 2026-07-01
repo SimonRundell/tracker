@@ -40,6 +40,7 @@ namespace AtRiskTracker.Admin
             AddColText("Pass Pts",    "pass_pts",    0.6f);
             AddColText("Merit Pts",   "merit_pts",   0.6f);
             AddColText("Dist Pts",    "dist_pts",    0.6f);
+            HideIdColumn();
         }
 
         protected override async Task LoadDataAsync()

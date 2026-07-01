@@ -128,14 +128,12 @@ namespace AtRiskTracker.Models
         [JsonProperty("sort_order")]  public int    SortOrder   { get; set; }
     }
 
-    // Assessment defs (admin)
+    // Assessment defs (admin) — mirrors tblassessment_def
     public class AssessmentDefAdminDto
     {
-        [JsonProperty("id")]          public int    Id          { get; set; }
-        [JsonProperty("unit_id")]     public int    UnitId      { get; set; }
-        [JsonProperty("title")]       public string Title       { get; set; }
-        [JsonProperty("description")] public string Description { get; set; }
-        [JsonProperty("max_mark")]    public int?   MaxMark     { get; set; }
-        [JsonProperty("unitcode")]    public string Unitcode    { get; set; }
+        [JsonProperty("id")]         public int    Id        { get; set; }
+        [JsonProperty("unit_id")]    public int    UnitId    { get; set; }
+        [JsonProperty("part_name")]  public string PartName  { get; set; }
+        [JsonProperty("sort_order")] public int    SortOrder { get; set; }
     }
 }

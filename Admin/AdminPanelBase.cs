@@ -137,6 +137,12 @@ namespace AtRiskTracker.Admin
             MessageBox.Show("Delete this item?", "Confirm Delete",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
 
+        /// <summary>Hides the ID column (first column) — it is still used internally via row.Tag.</summary>
+        protected void HideIdColumn()
+        {
+            if (_grid.Columns.Count > 0) _grid.Columns[0].Visible = false;
+        }
+
         protected void AddColText(string header, string name, float weight = 1)
         {
             _grid.Columns.Add(new DataGridViewTextBoxColumn

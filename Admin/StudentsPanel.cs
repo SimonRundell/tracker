@@ -41,6 +41,7 @@ namespace AtRiskTracker.Admin
             AddColText("Forename", "firstname",  1.5f);
             AddColText("Surname",  "lastname",   1.5f);
             AddColText("Concern",  "concern",    1f);
+            HideIdColumn();
         }
 
         protected override async Task LoadDataAsync()

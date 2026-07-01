@@ -1,6 +1,9 @@
 /**
  * CourseUnitsPanel — admin CRUD for course-unit assignments.
  *
+ * The /courseunits/index.php endpoint requires a course_id filter, so we load
+ * all courses first and then build the combined view per course.
+ *
  * © 2026 Exeter College — Creative Commons NC-BY-SA 4.0
  */
 using System;
@@ -10,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AtRiskTracker.Models;
 using AtRiskTracker.Services;
+using Newtonsoft.Json;
 
 namespace AtRiskTracker.Admin
 {
@@ -24,16 +28,36 @@ namespace AtRiskTracker.Admin
             AddColText("Unit Code",  "unitcode",   0.8f);
             AddColText("Unit Name",  "unitname",   2f);
             AddColText("Year Taken", "year_taken", 0.7f);
+            HideIdColumn();
         }
 
         protected override async Task LoadDataAsync()
         {
             _grid.Rows.Clear();
-            var resp = await ApiService.Instance.GetAsync<ListResponse<CourseUnitDto>>("/courseunits/index.php");
-            foreach (var cu in resp?.Data ?? new List<CourseUnitDto>())
+
+            // The endpoint requires course_id — fetch courses, then units per course
+            var cr = await ApiService.Instance.GetAsync<CoursesResponse>("/courses/index.php");
+            var courses = cr?.Data ?? new List<CourseDto>();
+
+            foreach (var course in courses)
             {
-                var row = AddRow(cu.Id, cu.Coursename, cu.Unitcode, cu.Unitname, cu.YearTaken ?? 1);
-                row.Tag = cu;
+                var resp = await ApiService.Instance.GetAsync<ListResponse<CourseUnitRowDto>>(
+                    "/courseunits/index.php", $"course_id={course.Id}");
+
+                foreach (var u in resp?.Data ?? new List<CourseUnitRowDto>())
+                {
+                    var cu = new CourseUnitDto
+                    {
+                        CourseId   = course.Id,
+                        UnitId     = u.Id,
+                        Coursename = course.Coursename,
+                        Unitcode   = u.Unitcode,
+                        Unitname   = u.Unitname,
+                        YearTaken  = u.YearTaken,
+                    };
+                    var row = AddRow(0, cu.Coursename, cu.Unitcode, cu.Unitname, cu.YearTaken ?? 1);
+                    row.Tag = cu;
+                }
             }
         }
 
@@ -78,6 +102,15 @@ namespace AtRiskTracker.Admin
             }
             catch { }
             return (courses, units);
+        }
+
+        // Matches the shape returned by /courseunits/index.php?course_id=X
+        private class CourseUnitRowDto
+        {
+            [JsonProperty("id")]          public int    Id        { get; set; }
+            [JsonProperty("unitcode")]    public string Unitcode  { get; set; }
+            [JsonProperty("unitname")]    public string Unitname  { get; set; }
+            [JsonProperty("year_taken")]  public int?   YearTaken { get; set; }
         }
     }
 
