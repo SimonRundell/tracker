@@ -39,23 +39,22 @@ try {
             s.firstname,
             s.lastname,
             c.coursename,
-            g.groupname,
+            (SELECT g2.groupname
+             FROM   tblstudent_group sg2
+             JOIN   tblgroup g2 ON g2.id = sg2.group_id AND g2.course_id = cu.course_id
+             WHERE  sg2.student_id = s.id
+             LIMIT  1) AS groupname,
             u.unitcode,
             u.unitname,
             r.result,
             r.raw_mark,
-            uu.fullname  AS changed_by
+            uu.fullname AS changed_by
         FROM tblresults r
-        JOIN tblstudent  s  ON s.id  = r.student_id
-        JOIN tblunit     u  ON u.id  = r.unit_id
-        JOIN tbluser     uu ON uu.id = r.updated_by
-        -- join enrollment to get group/course; unit determines the course context
-        LEFT JOIN tblcourseunit cu ON cu.unit_id = u.id
-        LEFT JOIN tblgroup  g  ON g.id  = cu.course_id AND EXISTS (
-            SELECT 1 FROM tblstudent_group sg2
-            WHERE sg2.student_id = s.id AND sg2.group_id = g.id
-        )
-        LEFT JOIN tblcourse c  ON c.id  = cu.course_id
+        JOIN tblstudent     s  ON s.id  = r.student_id
+        JOIN tblunit        u  ON u.id  = r.unit_id
+        JOIN tbluser        uu ON uu.id = r.updated_by
+        JOIN tblcourseunit  cu ON cu.unit_id = u.id
+        JOIN tblcourse      c  ON c.id  = cu.course_id
         WHERE r.updated_by IS NOT NULL
     ';
 

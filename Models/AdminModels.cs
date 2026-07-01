@@ -91,6 +91,7 @@ namespace AtRiskTracker.Models
         [JsonProperty("firstname")]  public string Firstname { get; set; }
         [JsonProperty("lastname")]   public string Lastname  { get; set; }
         [JsonProperty("cisnumber")]  public string Cisnumber { get; set; }
+        public override string ToString() => $"{Lastname}, {Firstname} ({Cisnumber})";
     }
 
     // Unit as returned by /units/index.php (includes section_type and course grouping fields)

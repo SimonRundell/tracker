@@ -25,9 +25,11 @@ if (!$studentId && !$groupId) {
 try {
     $db  = getDb();
     $sql = 'SELECT sg.id, sg.student_id, sg.group_id, sg.concern_id,
+                   s.firstname, s.lastname, s.cisnumber,
                    g.groupname, c.id AS course_id, c.coursename,
                    con.concern
             FROM   tblstudent_group sg
+            JOIN   tblstudent s  ON s.id   = sg.student_id
             JOIN   tblgroup  g   ON g.id   = sg.group_id
             JOIN   tblcourse c   ON c.id   = g.course_id
             LEFT JOIN tblconcern con ON con.id = sg.concern_id';
@@ -40,7 +42,7 @@ try {
         $param  = $groupId;
     }
 
-    $sql .= ' ORDER BY c.coursename, g.groupname';
+    $sql .= ' ORDER BY s.lastname, s.firstname';
 
     $stmt = $db->prepare($sql);
     $stmt->execute([$param]);
