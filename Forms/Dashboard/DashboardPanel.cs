@@ -120,6 +120,16 @@ namespace AtRiskTracker.Forms.Dashboard
         }
 
         // ----------------------------------------------------------------
+        // Public: called by MainForm when dashboard tab is activated
+        // ----------------------------------------------------------------
+
+        public async System.Threading.Tasks.Task RefreshAsync()
+        {
+            if (_selectedGroupId.HasValue)
+                await LoadGridAsync(_selectedGroupId.Value);
+        }
+
+        // ----------------------------------------------------------------
         // Data loading
         // ----------------------------------------------------------------
 

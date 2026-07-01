@@ -69,7 +69,19 @@ namespace AtRiskTracker.Admin
             if (!(row.Tag is StudentAdminDto s)) return;
             using var dlg = new StudentEditDialog(s);
             if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
+
             await ApiService.Instance.PutAsync<object>("/students/update.php", dlg.ToPayload(s.Id));
+
+            // Update concern on the enrollment row if the student has one
+            if (s.SgId.HasValue)
+            {
+                await ApiService.Instance.PutAsync<object>("/enrollments/update.php", new
+                {
+                    id         = s.SgId.Value,
+                    concern_id = dlg.SelectedConcernId,
+                });
+            }
+
             await ReloadAsync();
         }
 

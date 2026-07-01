@@ -415,7 +415,8 @@ namespace AtRiskTracker.Admin
                                 u.CourseIds.Split(',')
                                            .Select(id => id.Trim())
                                            .Contains(course.Id.ToString()))
-                    .OrderBy(u => u.Unitcode)
+                    .OrderBy(u => u.YearTaken ?? 0)
+                    .ThenBy(u => u.Unitcode)
                     .ToList();
 
                 if (!courseUnits.Any()) continue;

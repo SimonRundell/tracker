@@ -16,6 +16,11 @@ namespace AtRiskTracker.Forms
             InitializeComponent();
             if (Program.AppIcon != null) Icon = Program.AppIcon;
             _lblUser.Text = $"Logged in as: {ApiService.Instance.CurrentUser?.Fullname}";
+            _tabs.SelectedIndexChanged += async (s, e) =>
+            {
+                if (_tabs.SelectedIndex == 0)
+                    await _dashboardPanel.RefreshAsync();
+            };
         }
 
         private void OnDashboard(object sender, EventArgs e)  => _tabs.SelectedIndex = 0;

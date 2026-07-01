@@ -131,7 +131,7 @@ namespace AtRiskTracker.Forms.Dashboard
             _grid.Rows.Clear();
 
             // Fixed columns
-            AddCol("CIS No",    60);
+            AddCol("CIS No",    90);
             AddCol("Forename",  90);
             AddCol("Surname",   100);
             AddCol("Concern",   90);
@@ -259,6 +259,22 @@ namespace AtRiskTracker.Forms.Dashboard
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             int unitStartCol = FixedCols;
             int unitEndCol   = unitStartCol + (_units?.Count ?? 0) - 1;
+
+            // Notes indicator on CIS No column
+            if (e.ColumnIndex == 0)
+            {
+                var student = _grid.Rows[e.RowIndex].Tag as StudentDto;
+                if (student != null && !string.IsNullOrWhiteSpace(student.Notes))
+                {
+                    e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+                    const int r = 6;
+                    var dot = new Rectangle(e.CellBounds.Right - r - 3,
+                                            e.CellBounds.Top   + 3, r, r);
+                    e.Graphics.FillEllipse(Brushes.DodgerBlue, dot);
+                    e.Handled = true;
+                }
+                return;
+            }
 
             if (e.ColumnIndex < unitStartCol || e.ColumnIndex > unitEndCol) return;
 

@@ -1,5 +1,3 @@
-using AtRiskTracker.Controls;
-
 namespace AtRiskTracker.Dialogs
 {
     partial class NotesDialog
@@ -14,7 +12,7 @@ namespace AtRiskTracker.Dialogs
 
         private void InitializeComponent()
         {
-            this._editor    = new HtmlEditor();
+            this._editor    = new System.Windows.Forms.RichTextBox();
             this._btnPanel  = new System.Windows.Forms.Panel();
             this._btnSave   = new System.Windows.Forms.Button();
             this._btnCancel = new System.Windows.Forms.Button();
@@ -23,8 +21,12 @@ namespace AtRiskTracker.Dialogs
             //
             // _editor
             //
-            this._editor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._editor.Name = "_editor";
+            this._editor.Dock        = System.Windows.Forms.DockStyle.Fill;
+            this._editor.Name        = "_editor";
+            this._editor.Font        = new System.Drawing.Font("Trebuchet MS", 10F);
+            this._editor.ScrollBars  = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this._editor.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._editor.AcceptsTab  = true;
             //
             // _btnPanel
             //
@@ -73,9 +75,9 @@ namespace AtRiskTracker.Dialogs
             this.ResumeLayout(false);
         }
 
-        private Controls.HtmlEditor            _editor;
-        private System.Windows.Forms.Panel     _btnPanel;
-        private System.Windows.Forms.Button    _btnSave;
-        private System.Windows.Forms.Button    _btnCancel;
+        private System.Windows.Forms.RichTextBox  _editor;
+        private System.Windows.Forms.Panel        _btnPanel;
+        private System.Windows.Forms.Button       _btnSave;
+        private System.Windows.Forms.Button       _btnCancel;
     }
 }

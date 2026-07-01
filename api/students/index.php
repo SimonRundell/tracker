@@ -20,7 +20,17 @@ try {
     $db      = getDb();
     $groupId = isset($_GET['group_id']) ? (int)$_GET['group_id'] : null;
 
+    // Subqueries fetch the first enrollment row's id, concern_id and concern label.
+    // Students with no enrollment return NULLs for those columns.
     $sql = 'SELECT s.id, s.firstname, s.lastname, s.cisnumber,
+                   (SELECT sg2.id         FROM tblstudent_group sg2
+                    WHERE sg2.student_id = s.id ORDER BY sg2.id LIMIT 1) AS sg_id,
+                   (SELECT sg2.concern_id FROM tblstudent_group sg2
+                    WHERE sg2.student_id = s.id ORDER BY sg2.id LIMIT 1) AS concern_id,
+                   (SELECT con2.concern
+                    FROM tblstudent_group sg2
+                    LEFT JOIN tblconcern con2 ON con2.id = sg2.concern_id
+                    WHERE sg2.student_id = s.id ORDER BY sg2.id LIMIT 1)  AS concern,
                    GROUP_CONCAT(DISTINCT c.coursename ORDER BY c.coursename SEPARATOR \', \') AS courses
             FROM   tblstudent s
             LEFT JOIN tblstudent_group sg ON sg.student_id = s.id

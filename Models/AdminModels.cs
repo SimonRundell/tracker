@@ -22,12 +22,13 @@ namespace AtRiskTracker.Models
     // Students
     public class StudentAdminDto
     {
-        [JsonProperty("id")]        public int    Id        { get; set; }
-        [JsonProperty("cisnumber")] public string Cisnumber { get; set; }
-        [JsonProperty("firstname")] public string Firstname { get; set; }
-        [JsonProperty("lastname")]  public string Lastname  { get; set; }
-        [JsonProperty("concern")]   public string Concern   { get; set; }
-        [JsonProperty("notes")]     public string Notes     { get; set; }
+        [JsonProperty("id")]         public int    Id        { get; set; }
+        [JsonProperty("cisnumber")]  public string Cisnumber { get; set; }
+        [JsonProperty("firstname")]  public string Firstname { get; set; }
+        [JsonProperty("lastname")]   public string Lastname  { get; set; }
+        [JsonProperty("sg_id")]      public int?   SgId      { get; set; }
+        [JsonProperty("concern_id")] public int?   ConcernId { get; set; }
+        [JsonProperty("concern")]    public string Concern   { get; set; }
     }
 
     // Units (admin)
@@ -103,6 +104,7 @@ namespace AtRiskTracker.Models
         [JsonProperty("glh")]          public int    Glh         { get; set; }
         [JsonProperty("is_external")]  public int    IsExternal  { get; set; }
         [JsonProperty("section_type")] public string SectionType { get; set; }
+        [JsonProperty("year_taken")]   public int?   YearTaken   { get; set; }
         [JsonProperty("courses")]      public string Courses     { get; set; }
         [JsonProperty("course_ids")]   public string CourseIds   { get; set; }
         public override string ToString() => $"{Unitcode} — {Unitname}";

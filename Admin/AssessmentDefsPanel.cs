@@ -252,7 +252,8 @@ namespace AtRiskTracker.Admin
                 var courseUnits = units
                     .Where(u => !string.IsNullOrEmpty(u.CourseIds) &&
                                 u.CourseIds.Split(',').Select(id => id.Trim()).Contains(course.Id.ToString()))
-                    .OrderBy(u => u.Unitcode)
+                    .OrderBy(u => u.YearTaken ?? 0)
+                    .ThenBy(u => u.Unitcode)
                     .ToList();
 
                 if (!courseUnits.Any()) continue;
