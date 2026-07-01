@@ -14,6 +14,7 @@ namespace AtRiskTracker.Admin
         {
             this._tabs                = new System.Windows.Forms.TabControl();
             this._pgStudents          = new System.Windows.Forms.TabPage();
+            this._pgEnrollments       = new System.Windows.Forms.TabPage();
             this._pgCourses           = new System.Windows.Forms.TabPage();
             this._pgGroups            = new System.Windows.Forms.TabPage();
             this._pgUnits             = new System.Windows.Forms.TabPage();
@@ -23,6 +24,7 @@ namespace AtRiskTracker.Admin
             this._pgConcerns          = new System.Windows.Forms.TabPage();
             this._pgUsers             = new System.Windows.Forms.TabPage();
             this._pnlStudents         = new StudentsPanel();
+            this._pnlEnrollments      = new EnrollmentsPanel();
             this._pnlCourses          = new CoursesPanel();
             this._pnlGroups           = new GroupsPanel();
             this._pnlUnits            = new UnitsPanel();
@@ -33,6 +35,7 @@ namespace AtRiskTracker.Admin
             this._pnlUsers            = new UsersPanel();
             this._tabs.SuspendLayout();
             this._pgStudents.SuspendLayout();
+            this._pgEnrollments.SuspendLayout();
             this._pgCourses.SuspendLayout();
             this._pgGroups.SuspendLayout();
             this._pgUnits.SuspendLayout();
@@ -46,6 +49,7 @@ namespace AtRiskTracker.Admin
             // _tabs
             //
             this._tabs.Controls.Add(this._pgStudents);
+            this._tabs.Controls.Add(this._pgEnrollments);
             this._tabs.Controls.Add(this._pgCourses);
             this._tabs.Controls.Add(this._pgGroups);
             this._tabs.Controls.Add(this._pgUnits);
@@ -68,6 +72,17 @@ namespace AtRiskTracker.Admin
             //
             this._pnlStudents.Dock = System.Windows.Forms.DockStyle.Fill;
             this._pnlStudents.Name = "_pnlStudents";
+            //
+            // _pgEnrollments
+            //
+            this._pgEnrollments.Controls.Add(this._pnlEnrollments);
+            this._pgEnrollments.Name = "_pgEnrollments";
+            this._pgEnrollments.Text = "Enrollments";
+            //
+            // _pnlEnrollments
+            //
+            this._pnlEnrollments.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._pnlEnrollments.Name = "_pnlEnrollments";
             //
             // _pgCourses
             //
@@ -165,6 +180,7 @@ namespace AtRiskTracker.Admin
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Name = "AdminTabPanel";
             this._pgStudents.ResumeLayout(false);
+            this._pgEnrollments.ResumeLayout(false);
             this._pgCourses.ResumeLayout(false);
             this._pgGroups.ResumeLayout(false);
             this._pgUnits.ResumeLayout(false);
@@ -179,6 +195,7 @@ namespace AtRiskTracker.Admin
 
         private System.Windows.Forms.TabControl  _tabs;
         private System.Windows.Forms.TabPage     _pgStudents;
+        private System.Windows.Forms.TabPage     _pgEnrollments;
         private System.Windows.Forms.TabPage     _pgCourses;
         private System.Windows.Forms.TabPage     _pgGroups;
         private System.Windows.Forms.TabPage     _pgUnits;
@@ -188,6 +205,7 @@ namespace AtRiskTracker.Admin
         private System.Windows.Forms.TabPage     _pgConcerns;
         private System.Windows.Forms.TabPage     _pgUsers;
         private StudentsPanel         _pnlStudents;
+        private EnrollmentsPanel      _pnlEnrollments;
         private CoursesPanel          _pnlCourses;
         private GroupsPanel           _pnlGroups;
         private UnitsPanel            _pnlUnits;

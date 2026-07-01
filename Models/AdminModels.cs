@@ -29,6 +29,7 @@ namespace AtRiskTracker.Models
         [JsonProperty("sg_id")]      public int?   SgId      { get; set; }
         [JsonProperty("concern_id")] public int?   ConcernId { get; set; }
         [JsonProperty("concern")]    public string Concern   { get; set; }
+        public override string ToString() => $"{Lastname}, {Firstname} ({Cisnumber})";
     }
 
     // Units (admin)
@@ -88,9 +89,14 @@ namespace AtRiskTracker.Models
         [JsonProperty("id")]         public int    Id        { get; set; }
         [JsonProperty("student_id")] public int    StudentId { get; set; }
         [JsonProperty("group_id")]   public int    GroupId   { get; set; }
+        [JsonProperty("course_id")]  public int    CourseId  { get; set; }
+        [JsonProperty("concern_id")] public int?   ConcernId { get; set; }
         [JsonProperty("firstname")]  public string Firstname { get; set; }
         [JsonProperty("lastname")]   public string Lastname  { get; set; }
         [JsonProperty("cisnumber")]  public string Cisnumber { get; set; }
+        [JsonProperty("groupname")]  public string Groupname { get; set; }
+        [JsonProperty("coursename")] public string Coursename{ get; set; }
+        [JsonProperty("concern")]    public string Concern   { get; set; }
         public override string ToString() => $"{Lastname}, {Firstname} ({Cisnumber})";
     }
 
