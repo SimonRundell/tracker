@@ -9,6 +9,7 @@ obj/
 *.user
 *.suo
 *.userprefs
+api/.config.json
 
 # Rider
 .idea/

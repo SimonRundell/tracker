@@ -1,0 +1,13 @@
+{
+  "db": {
+    "host": "localhost",
+    "name": "atriskreg",
+    "user": "db_username",
+    "pass": "db_password"
+  },
+  "jwt": {
+    "secret": "REPLACE_WITH_STRONG_RANDOM_SECRET_MIN_32_CHARS_HERE",
+    "accessExpiry": 3600,
+    "refreshExpiry": 604800
+  }
+}
