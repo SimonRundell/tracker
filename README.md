@@ -45,7 +45,7 @@ A Windows Forms application targeting `net8.0-windows`. Namespace `AtRiskTracker
 | `Controls/` | Reusable controls, including a `HtmlEditor` for rich-text student notes |
 | `Models/` | Data transfer objects grouped by area (`AuthModels`, `AdminModels`, `GridModels`, `ReportModels`) |
 | `Services/` | `ApiService` (HTTP + auth) and `AppConfig` (settings loader) |
-| `Utils/` | `AtRiskCalc` and `GradeCalc` grade-point calculation helpers |
+| `Utils/` | `AtRiskCalc` and `GradeCalc` grade-point calculation helpers, plus `CsvParser` for CSV import |
 
 ### Configuration
 
@@ -197,6 +197,20 @@ tracker/
 └── data/
     └── schema.sql            MySQL schema, view and seed data
 ```
+
+---
+
+## Changelog
+
+### 2026-07-02
+
+- **Dashboard grade grid**: hovering a unit column header now shows the full unit name as a tooltip (unit columns are headed by their short unit code, e.g. `R058`, which doesn't fit the column width).
+- **Dashboard grade grid**: fixed a regression where clicking a student's "Predict" cell no longer opened the Grade Prediction dialog. A refactor had accidentally gated the click on a right-click, when it should fire on a left-click like the rest of the grid.
+- **Dashboard grade grid**: fixed a bug where bulk-setting an assignment date via "Set Assignment Date for All Students..." updated the database correctly but left the in-memory grid data stale, so reopening a student's Assessment Milestones dialog straight afterwards still showed "Not Set". The dialog now updates its local copy immediately after a successful save.
+- **Assessment Milestones dialog**: date fields that are unset (null) no longer display today's date next to an unticked checkbox, which looked like the date had already been set. They now render blank until the checkbox is ticked.
+- **Dashboard course selector**: the Course dropdown is now on its own full-width row (widened from 300px to 650px) so long course titles (e.g. "Introduction to the principles of...") are no longer truncated. Group, Year and Print moved to a second row below it, with a little extra padding above the grade grid.
+- **Main window**: added a Help → About menu item, and a "Do you really want to exit?" confirmation when closing the app (via the window's close button or File → Exit). Logging out does not trigger the prompt.
+- **Admin → Students**: added a CSV bulk-import feature ("Import CSV..." on the toolbar). Accepts a UTF-8 CSV (as exported by Excel's "CSV UTF-8" format) with flexible header matching (e.g. "CIS No", "Forename", "Surname"), previews every row — flagging and excluding rows missing a first or last name — before anything is sent to the server, and optionally enrols the imported students into a group selected via a course → group cascade (avoids ambiguity between same-named groups in different courses). Uses the existing `/students/import.php` endpoint, which previously had no UI wired up to it.
 
 ---
 

@@ -17,7 +17,17 @@ namespace AtRiskTracker.Admin
     {
         private TextBox _filterCis, _filterFirst, _filterLast;
 
-        public StudentsPanel() { InitializeComponent(); }
+        public StudentsPanel()
+        {
+            InitializeComponent();
+            var btnImport = AddToolbarButton("Import CSV...", Color.FromArgb(140, 90, 0), 130);
+            btnImport.Click += async (s, e) =>
+            {
+                using var dlg = new StudentImportDialog();
+                if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
+                    await SafeRunAsync(ReloadAsync);
+            };
+        }
 
         protected override Control BuildFilterBar()
         {

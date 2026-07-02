@@ -27,6 +27,8 @@ namespace AtRiskTracker.Forms
             this._miLogout       = new System.Windows.Forms.ToolStripMenuItem();
             this._sep3           = new System.Windows.Forms.ToolStripSeparator();
             this._miExit         = new System.Windows.Forms.ToolStripMenuItem();
+            this._helpMenu       = new System.Windows.Forms.ToolStripMenuItem();
+            this._miAbout        = new System.Windows.Forms.ToolStripMenuItem();
             this._status         = new System.Windows.Forms.StatusStrip();
             this._lblUser        = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblVersion     = new System.Windows.Forms.ToolStripStatusLabel();
@@ -47,7 +49,7 @@ namespace AtRiskTracker.Forms
             //
             // _menuStrip
             //
-            this._menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this._fileMenu });
+            this._menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this._fileMenu, this._helpMenu });
             this._menuStrip.Location = new System.Drawing.Point(0, 0);
             this._menuStrip.Name     = "_menuStrip";
             this._menuStrip.Size     = new System.Drawing.Size(1264, 24);
@@ -112,6 +114,20 @@ namespace AtRiskTracker.Forms
             this._miExit.Name  = "_miExit";
             this._miExit.Text  = "Exit";
             this._miExit.Click += new System.EventHandler(this.OnExit);
+            //
+            // _helpMenu
+            //
+            this._helpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this._miAbout
+            });
+            this._helpMenu.Name = "_helpMenu";
+            this._helpMenu.Text = "Help";
+            //
+            // _miAbout
+            //
+            this._miAbout.Name   = "_miAbout";
+            this._miAbout.Text   = "About...";
+            this._miAbout.Click += new System.EventHandler(this.OnAbout);
             //
             // _status
             //
@@ -210,6 +226,8 @@ namespace AtRiskTracker.Forms
         private System.Windows.Forms.ToolStripMenuItem      _miLogout;
         private System.Windows.Forms.ToolStripSeparator     _sep3;
         private System.Windows.Forms.ToolStripMenuItem      _miExit;
+        private System.Windows.Forms.ToolStripMenuItem      _helpMenu;
+        private System.Windows.Forms.ToolStripMenuItem      _miAbout;
         private System.Windows.Forms.StatusStrip            _status;
         private System.Windows.Forms.ToolStripStatusLabel   _lblUser;
         private System.Windows.Forms.ToolStripStatusLabel   _lblVersion;

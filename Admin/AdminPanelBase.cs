@@ -23,6 +23,8 @@ namespace AtRiskTracker.Admin
         protected DataGridView _grid;
         protected Label        _lblError;
         protected Button       _btnAdd, _btnEdit, _btnDelete, _btnRefresh;
+        private   Panel        _toolbar;
+        private   int          _nextToolbarLeft = 428; // right after Refresh (322 + 100 + gap)
 
         protected AdminPanelBase()
         {
@@ -30,7 +32,7 @@ namespace AtRiskTracker.Admin
             BackColor = Color.White;
 
             // Toolbar
-            var toolbar = new Panel
+            _toolbar = new Panel
             {
                 Dock      = DockStyle.Top,
                 Height    = 40,
@@ -53,7 +55,7 @@ namespace AtRiskTracker.Admin
             _btnDelete.Click += async (s, e) => { if (SelectedRow != null && ConfirmDelete()) await SafeRunAsync(() => DeleteItemAsync(SelectedRow)); };
             _btnRefresh.Click+= async (s, e) => await SafeRunAsync(ReloadAsync);
 
-            toolbar.Controls.AddRange(new Control[] { _btnAdd, _btnEdit, _btnDelete, _btnRefresh });
+            _toolbar.Controls.AddRange(new Control[] { _btnAdd, _btnEdit, _btnDelete, _btnRefresh });
 
             _lblError = new Label
             {
@@ -102,7 +104,7 @@ namespace AtRiskTracker.Admin
             Controls.Add(_grid);
             Controls.Add(_lblError);
             if (filterControl != null) Controls.Add(filterControl);
-            Controls.Add(toolbar);
+            Controls.Add(_toolbar);
 
             Load += async (s, e) => await SafeRunAsync(ReloadAsync);
         }
@@ -285,6 +287,17 @@ namespace AtRiskTracker.Admin
                 }
             };
             bar.Controls.Add(btn);
+        }
+
+        /// <summary>Adds an extra toolbar button after the built-in Add/Edit/Delete/Refresh set. Call from a subclass constructor after InitializeComponent().</summary>
+        protected Button AddToolbarButton(string text, Color back, int width = 100)
+        {
+            var btn = MakeBtn(text, back);
+            btn.Width = width;
+            btn.Left  = _nextToolbarLeft;
+            _nextToolbarLeft += width + 6;
+            _toolbar.Controls.Add(btn);
+            return btn;
         }
 
         private Button MakeBtn(string text, Color back)

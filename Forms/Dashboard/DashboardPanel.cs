@@ -45,34 +45,38 @@ namespace AtRiskTracker.Forms.Dashboard
             _selectorBar = new Panel
             {
                 Dock      = DockStyle.Top,
-                Height    = 48,
-                Padding   = new Padding(8, 8, 8, 4),
+                Height    = 92,
+                Padding   = new Padding(8, 8, 8, 16),
                 BackColor = Color.FromArgb(240, 244, 248),
             };
 
-            var lblCourse = new Label { Text = "Course:", AutoSize = true, Top = 16, Left = 10 };
+            // Row 1: course — given its own row and a lot of width, since many
+            // course names ("Introduction to the principles of...") are long
+            // and were getting truncated in a narrower shared-row combo.
+            var lblCourse = new Label { Text = "Course:", AutoSize = true, Top = 12, Left = 10 };
             _cboCourse = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 300, Top = 12, Left = 70,
+                Width = 650, Top = 8, Left = 70,
                 Font  = new Font("Trebuchet MS", 9f),
             };
             _cboCourse.SelectedIndexChanged += OnCourseSelected;
 
-            var lblGroup = new Label { Text = "Group:", AutoSize = true, Top = 16, Left = 385 };
+            // Row 2: group / year / print
+            var lblGroup = new Label { Text = "Group:", AutoSize = true, Top = 50, Left = 10 };
             _cboGroup = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 200, Top = 12, Left = 438,
+                Width = 200, Top = 46, Left = 70,
                 Font  = new Font("Trebuchet MS", 9f),
             };
             _cboGroup.SelectedIndexChanged += OnGroupSelected;
 
-            var lblYear = new Label { Text = "Year:", AutoSize = true, Top = 16, Left = 652 };
+            var lblYear = new Label { Text = "Year:", AutoSize = true, Top = 50, Left = 284 };
             _cboYear = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 100, Top = 12, Left = 698,
+                Width = 100, Top = 46, Left = 330,
                 Font  = new Font("Trebuchet MS", 9f),
             };
             _cboYear.Items.Add("All Years");
@@ -82,7 +86,7 @@ namespace AtRiskTracker.Forms.Dashboard
             _btnPrint = new Button
             {
                 Text      = "Print / PDF",
-                Top       = 10, Left = 815,
+                Top       = 44, Left = 444,
                 Width     = 100, Height = 28,
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.FromArgb(80, 80, 80),
@@ -98,10 +102,10 @@ namespace AtRiskTracker.Forms.Dashboard
             _lblStatus = new Label
             {
                 Dock      = DockStyle.Top,
-                Height    = 24,
+                Height    = 32,
                 Text      = "Select a course and group to view the grade grid.",
                 TextAlign = ContentAlignment.MiddleLeft,
-                Padding   = new Padding(8, 0, 0, 0),
+                Padding   = new Padding(8, 4, 0, 0),
                 ForeColor = Color.Gray,
             };
 

@@ -273,9 +273,15 @@ namespace AtRiskTracker.Dialogs
             }
             else
             {
-                dtp.Value   = DateTime.Today;
-                dtp.Checked = false;
+                dtp.Value        = DateTime.Today;
+                dtp.Checked      = false;
+                dtp.CustomFormat = " "; // blank display for an unset date — Value is a placeholder only
             }
+
+            // Swap between a blank display and the real date format as the checkbox is (un)ticked.
+            // DateTimePicker has no CheckedChanged event, but ValueChanged also fires on a
+            // checkbox toggle (the underlying native control raises it for either change).
+            dtp.ValueChanged += (s, e) => dtp.CustomFormat = dtp.Checked ? "dd/MM/yyyy" : " ";
 
             return dtp;
         }

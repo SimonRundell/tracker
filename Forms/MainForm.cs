@@ -11,6 +11,8 @@ namespace AtRiskTracker.Forms
 {
     public partial class MainForm : Form
     {
+        private bool _loggingOut = false;
+
         public MainForm()
         {
             InitializeComponent();
@@ -21,6 +23,7 @@ namespace AtRiskTracker.Forms
                 if (_tabs.SelectedIndex == 0)
                     await _dashboardPanel.RefreshAsync();
             };
+            FormClosing += OnMainFormClosing;
         }
 
         private void OnDashboard(object sender, EventArgs e)  => _tabs.SelectedIndex = 0;
@@ -31,10 +34,41 @@ namespace AtRiskTracker.Forms
 
         private void OnLogout(object sender, EventArgs e)
         {
+            _loggingOut = true;
             ApiService.Instance.Logout();
             var login = new LoginForm();
             login.Show();
             Close();
+        }
+
+        private void OnAbout(object sender, EventArgs e)
+        {
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            MessageBox.Show(this,
+                $"AtRisk Tracker\nVersion {version}\n\n" +
+                "© 2026 Exeter College\n" +
+                "Released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) license.",
+                "About AtRisk Tracker",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+
+        // Confirm before actually leaving the application; skip when the close
+        // is part of a Logout (which re-shows the login form, not a real exit).
+        private void OnMainFormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_loggingOut) return;
+            if (e.CloseReason != CloseReason.UserClosing) return;
+
+            var result = MessageBox.Show(this,
+                "Do you really want to exit AtRisk Tracker?",
+                "Confirm Exit",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
+
+            if (result != DialogResult.Yes)
+                e.Cancel = true;
         }
     }
 }

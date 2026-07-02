@@ -156,7 +156,8 @@ namespace AtRiskTracker.Forms.Dashboard
             foreach (var u in units)
             {
                 var col = AddCol(u.Unitcode, 60);
-                col.Tag = u; // store unit for click handling
+                col.Tag         = u; // store unit for click handling
+                col.ToolTipText = u.Unitname;
             }
 
             // Predict column
@@ -291,8 +292,9 @@ namespace AtRiskTracker.Forms.Dashboard
         }
 
         // ----------------------------------------------------------------
-        // Cell mouse — left-click on name cols opens notes;
-        //              right-click on unit/predict cols shows context menu
+        // Cell mouse — left-click on name cols opens notes, left-click on the
+        //              predict col opens the prediction dialog; right-click on
+        //              a unit col shows the grade/milestone context menu
         // ----------------------------------------------------------------
 
         private void OnCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -325,8 +327,8 @@ namespace AtRiskTracker.Forms.Dashboard
                 return;
             }
 
-            // Right-click on the Predict column
-            if (e.Button == MouseButtons.Right && showPredict && col == unitEndCol + 1)
+            // Left-click on the Predict column
+            if (e.Button == MouseButtons.Left && showPredict && col == unitEndCol + 1)
             {
                 OpenPrediction(student);
                 return;
@@ -380,7 +382,8 @@ namespace AtRiskTracker.Forms.Dashboard
             foreach (var student in _students)
             {
                 // Build the list of def IDs to update for this student
-                var updates = new List<object>();
+                var updates    = new List<object>();
+                var appliedIds = new List<int>();
                 foreach (int defId in dlg.SelectedDefIds)
                 {
                     // When not overwriting, skip students who already have a date_set
@@ -401,6 +404,7 @@ namespace AtRiskTracker.Forms.Dashboard
                         date_resubmission = (string)null,
                         date_completed    = (string)null,
                     });
+                    appliedIds.Add(defId);
                 }
 
                 if (updates.Count == 0) continue;
@@ -412,6 +416,23 @@ namespace AtRiskTracker.Forms.Dashboard
                         student_id = student.Id,
                         updates,
                     });
+
+                    // Keep the in-memory copy in sync so re-opening the Assessment
+                    // Milestones dialog for this student reflects the change right
+                    // away, without waiting for a full grid reload from the server.
+                    if (student.Assessments == null) student.Assessments = new Dictionary<string, AssessmentRecordDto>();
+                    foreach (int defId in appliedIds)
+                    {
+                        var rec = new AssessmentRecordDto { Status = "SET", DateSet = dlg.DateSet };
+                        student.Assessments[defId.ToString()] = rec;
+                        AssessmentUpdated?.Invoke(this, new AssessmentUpdatedArgs
+                        {
+                            StudentId = student.Id,
+                            DefId     = defId,
+                            Record    = rec,
+                        });
+                    }
+
                     applied++;
                 }
                 catch { failed++; }

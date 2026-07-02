@@ -141,6 +141,13 @@
       <DependentUpon>StudentEditDialog.cs</DependentUpon>
     </Compile>
 
+    <Compile Update="Admin\StudentImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Admin\StudentImportDialog.Designer.cs">
+      <DependentUpon>StudentImportDialog.cs</DependentUpon>
+    </Compile>
+
     <Compile Update="Admin\UnitEditDialog.cs">
       <SubType>Form</SubType>
     </Compile>

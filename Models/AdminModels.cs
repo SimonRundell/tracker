@@ -145,4 +145,18 @@ namespace AtRiskTracker.Models
         [JsonProperty("part_name")]  public string PartName  { get; set; }
         [JsonProperty("sort_order")] public int    SortOrder { get; set; }
     }
+
+    // Result of POST /students/import.php
+    public class StudentImportResultDto
+    {
+        [JsonProperty("imported")] public int                        Imported { get; set; }
+        [JsonProperty("updated")]  public int                        Updated  { get; set; }
+        [JsonProperty("errors")]   public List<StudentImportErrorDto> Errors  { get; set; }
+    }
+
+    public class StudentImportErrorDto
+    {
+        [JsonProperty("row")]     public int    Row     { get; set; }
+        [JsonProperty("message")] public string Message { get; set; }
+    }
 }
